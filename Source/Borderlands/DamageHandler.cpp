@@ -56,7 +56,7 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
-BOOLEAN UDamageHandler::Damage(int damageAmount, FString type)
+bool UDamageHandler::Damage(int damageAmount, FString type)
 {
 	for (UAbsorber* abs : absorbers) {
 		damageAmount = abs->absorb(damageAmount, type);

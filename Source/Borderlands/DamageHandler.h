@@ -22,7 +22,7 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
-	virtual BOOLEAN Damage(int damageAmount, FString type);
+	virtual bool Damage(int damageAmount, FString type);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Absorbers")
 		TArray<UAbsorber*> absorbers;
