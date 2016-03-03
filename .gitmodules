@@ -1,3 +1,4 @@
 [submodule "Content"]
 	path = Content
 	url = https://github.com/yongaro/Borderlands_assets
+	branch = master
