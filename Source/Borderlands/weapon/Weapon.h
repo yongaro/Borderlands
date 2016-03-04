@@ -12,6 +12,15 @@ enum class EManufacturer : uint8{
 	Jakobs UMETA(DisplayName = "Jakobs")
 };
 
+USTRUCT(BlueprintType)
+struct FMyDamageEvent : public FDamageEvent
+{
+
+	GENERATED_USTRUCT_BODY() //rend intelisense fou
+	uint8 dps;
+	uint8 effectChance;
+};
+
 UCLASS()
 class BORDERLANDS_API AWeapon : public AActor
 {
@@ -58,7 +67,8 @@ public:
 	class UWeaponTypeComponent *WeaponTypeComponent;
 	class UWeaponState* CurrentState;
 	bool bIsFiring;
-
-private:
+	uint8 damageAmount;
+	FMyDamageEvent damageEvent;
 	
 };
+

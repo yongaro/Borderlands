@@ -11,7 +11,6 @@ UAbsorber::UAbsorber()
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-	PrimaryComponentTick.bCanEverTick = true;
 	maxAmount = 350; /*dummy default values*/
 	amount = maxAmount;
 	regenRate = 20.f;
@@ -64,9 +63,9 @@ int UAbsorber::getAmount()
 	return amount;
 }
 
-int UAbsorber::absorb(int damageAmount, FString DamageType)
+int UAbsorber::absorb(int damageAmount, FDamageEvent const & DamageEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s Absorbing %i"), *GetName(), damageAmount);
+	UE_LOG(LogTemp, Warning, TEXT("Absorbing %i"), damageAmount);
 	int unAbsorbed = 0;
 	if (damageAmount > amount) {
 		unAbsorbed = damageAmount - amount;

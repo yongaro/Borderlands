@@ -26,7 +26,7 @@ public:
 	virtual void setCoolDown(float coolDown);
 
 	virtual int getAmount();
-	virtual int absorb(int damageAmount, FString DamageType);
+	virtual int absorb(int damageAmount, FDamageEvent const & DamageEvent);
 	virtual void regen(float DeltaTime);
 
 	float amount;

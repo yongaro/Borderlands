@@ -6,12 +6,14 @@
 #include "WeaponState.h"
 #include "WeaponStateActive.h"
 #include "WeaponTypeComponent.h"
+#include "ElectricDamageType.h"
+
 
 
 // Sets default values
 AWeapon::AWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Create visual representation of weapon (skeltal mesh)
@@ -34,8 +36,10 @@ AWeapon::AWeapon()
 	CurrentState->OuterWeapon = this;
 	//CurrentState->Log();
 	bIsFiring = false;
+	damageEvent.DamageTypeClass = UElectricDamageType::StaticClass();
+	damageEvent.dps = 8;
+	damageAmount = 80;
 }
-
 // Called when the game starts or when spawned
 void AWeapon::BeginPlay()
 {
