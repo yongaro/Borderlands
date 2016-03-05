@@ -3,6 +3,8 @@
 #include "Borderlands.h"
 #include "BorderlandsGameMode.h"
 #include "BorderlandsHUD.h"
+#include "character/BorderlandsPlayerController.h"
+#include "character/BCharacter.h"
 #include "BorderlandsCharacter.h"
 
 ABorderlandsGameMode::ABorderlandsGameMode()
@@ -14,4 +16,10 @@ ABorderlandsGameMode::ABorderlandsGameMode()
 
 	// use our custom HUD class
 	HUDClass = ABorderlandsHUD::StaticClass();
+
+	//Set our player controller
+	PlayerControllerClass = ABorderlandsPlayerController::StaticClass();
+	DefaultPawnClass = ABCharacter::StaticClass();
+	//ABorderlandsPlayerController* PlayerController = PlayerControllerClass->GetDefaultObject<ABorderlandsPlayerController>();
+	
 }
