@@ -2,6 +2,7 @@
 
 #include "Borderlands.h"
 #include "Absorber.h"
+#include "DamageHandler.h"
 #include "ElectricDamageType.h"
 
 
@@ -12,13 +13,19 @@ UAbsorber::UAbsorber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
+	bWantsInitializeComponent = true;
 	PrimaryComponentTick.bCanEverTick = true;
 	maxAmount = 350; /*dummy default values*/
-	amount = maxAmount;
+	amount = 0;
 	regenRate = 20.f;
 	time = 0;
 	coolDown = 2;
 	type = EAbsType::Shield;
+	/*UActorComponent* comp= GetOwner()->FindComponentByClass(UDamageHandler::StaticClass());
+	UDamageHandler *dmg = Cast<UDamageHandler>(comp);
+	if (dmg) {
+		dmg->absorbers.Add(this);
+	}*/
 	// ...
 }
 
@@ -81,6 +88,15 @@ int UAbsorber::absorb(int damageAmount, FDamageEvent const & DamageEvent)
 	amount = FMath::Max(0,(int)( amount - damageAmount*multiplier));
 	time = -coolDown;
 	return unAbsorbed;
+}
+
+void UAbsorber::InitializeComponent()
+{
+	UActorComponent* comp = GetOwner()->FindComponentByClass(UDamageHandler::StaticClass());
+	UDamageHandler *dmg = Cast<UDamageHandler>(comp);
+	if (dmg) {
+		dmg->absorbers.Add(this);
+	}
 }
 
 void UAbsorber::regen(float DeltaTime)

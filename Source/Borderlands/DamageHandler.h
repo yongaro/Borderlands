@@ -21,10 +21,9 @@ public:
 	
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
-
+	virtual void InitializeComponent() override;
 	virtual bool Damage(int damageAmount, FDamageEvent const & DamageEvent);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Absorbers")
-		TArray<UAbsorber*> absorbers;
+	TArray<UAbsorber*> absorbers;
 	
 };

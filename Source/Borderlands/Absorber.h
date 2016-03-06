@@ -33,11 +33,15 @@ public:
 
 	virtual int getAmount();
 	virtual int absorb(int damageAmount, FDamageEvent const & DamageEvent);
+	virtual void InitializeComponent() override;
 	virtual void regen(float DeltaTime);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	EAbsType type;
 	float amount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	int32 maxAmount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	float regenRate;
 	float time;
 	float coolDown;

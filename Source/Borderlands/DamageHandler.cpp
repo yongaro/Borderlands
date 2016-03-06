@@ -3,6 +3,7 @@
 #include "Borderlands.h"
 #include "DamageHandler.h"
 #include "weapon/Weapon.h"
+#include "DamageActor.h"
 #include "Engine.h"
 
 // Sets default values for this component's properties
@@ -12,6 +13,7 @@ UDamageHandler::UDamageHandler()
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
+	bWantsInitializeComponent = true;
 	/*health = 10;
 	maxHealth = 350;
 	regenRate = 50.f;
@@ -19,14 +21,14 @@ UDamageHandler::UDamageHandler()
 	//armor = CreateDefaultSubobject<UAbsorber>(TEXT("Amount"));
 	//absorbers = TArray<UAbsorbers*>();
 	/*Example*/
-	UAbsorber* abs = CreateDefaultSubobject<UAbsorber>(TEXT("Armure"));
+	/*UAbsorber* abs = CreateDefaultSubobject<UAbsorber>(TEXT("Armure"));
 	abs->setCoolDown(2.5f);
 	abs->setRegenRate(200.f);
 	abs->setMaxAmount(700);
 	absorbers.Add(abs);
 	abs = CreateDefaultSubobject<UAbsorber>(TEXT("Vie"));
 	abs->type = EAbsType::Flesh;
-	absorbers.Add(abs);
+	absorbers.Add(abs);*/
 	// ...
 }
 
@@ -45,7 +47,7 @@ void UDamageHandler::BeginPlay()
 void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	FString s;
+	FString s=GetOwner()->GetName();
 	for (UAbsorber* abs : absorbers) {
 		s += " - " + abs->GetName();
 		s.AppendInt(abs->amount);
@@ -56,6 +58,14 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		FColor::Red,
 		FString::Printf(TEXT("%s"), *s));
 	// ...
+}
+
+void UDamageHandler::InitializeComponent()
+{
+	ADamageActor *dmg = Cast<ADamageActor>(GetOwner());
+	if (dmg) {
+		dmg->dmgHandler = this;
+	}
 }
 
 bool UDamageHandler::Damage(int damageAmount, FDamageEvent const & DamageEvent)

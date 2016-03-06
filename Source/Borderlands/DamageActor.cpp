@@ -10,8 +10,8 @@ ADamageActor::ADamageActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	dmgHandler = CreateDefaultSubobject<UDamageHandler>("handler");
-	AddOwnedComponent(dmgHandler);
+	/*dmgHandler = CreateDefaultSubobject<UDamageHandler>("handler");
+	AddOwnedComponent(dmgHandler);*/
 }
 
 // Called when the game starts or when spawned
@@ -31,13 +31,15 @@ void ADamageActor::Tick( float DeltaTime )
 float ADamageActor::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	/*Test pour type de degats*/
-	UElectricDamageType *DamageType = Cast<UElectricDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
-	if (DamageType) {
-		UE_LOG(LogTemp, Warning, TEXT("Aie %s %f"), *(DamageType->getText()),DamageAmount);
-	}
-	
-	if (dmgHandler->Damage(DamageAmount, DamageEvent)) {
-		UE_LOG(LogTemp, Warning, TEXT("Je meurs"));
+	if (dmgHandler) {
+		UElectricDamageType *DamageType = Cast<UElectricDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
+		if (DamageType) {
+			UE_LOG(LogTemp, Warning, TEXT("Aie %s %f"), *(DamageType->getText()), DamageAmount);
+		}
+
+		if (dmgHandler->Damage(DamageAmount, DamageEvent)) {
+			UE_LOG(LogTemp, Warning, TEXT("Je meurs"));
+		}
 	}
 	return 0.0f;
 }
