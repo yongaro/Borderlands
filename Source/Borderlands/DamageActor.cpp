@@ -33,11 +33,12 @@ float ADamageActor::TakeDamage(float DamageAmount, FDamageEvent const & DamageEv
 	/*Test pour type de degats*/
 	UElectricDamageType *DamageType = Cast<UElectricDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
 	if (DamageType) {
-		UE_LOG(LogTemp, Warning, TEXT("Aie %s %i"), *(DamageType->getText()),DamageAmount);
+		UE_LOG(LogTemp, Warning, TEXT("Aie %s %f"), *(DamageType->getText()),DamageAmount);
 	}
 	
-	if( dmgHandler->Damage(DamageAmount, DamageEvent))
+	if (dmgHandler->Damage(DamageAmount, DamageEvent)) {
 		UE_LOG(LogTemp, Warning, TEXT("Je meurs"));
+	}
 	return 0.0f;
 }
 

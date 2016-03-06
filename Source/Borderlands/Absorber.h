@@ -5,6 +5,12 @@
 #include "Components/ActorComponent.h"
 #include "Absorber.generated.h"
 
+UENUM(BlueprintType, Category = Gameplay)
+enum class EAbsType : uint8 {
+	Shield UMETA(DisplayName = "Shield"),
+	Flesh UMETA(DisplayName = "Flesh"),
+	Armor UMETA(DisplayName = "Armor")
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BORDERLANDS_API UAbsorber : public UActorComponent
@@ -29,6 +35,7 @@ public:
 	virtual int absorb(int damageAmount, FDamageEvent const & DamageEvent);
 	virtual void regen(float DeltaTime);
 
+	EAbsType type;
 	float amount;
 	int32 maxAmount;
 	float regenRate;

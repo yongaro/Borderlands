@@ -13,12 +13,12 @@ enum class EManufacturer : uint8{
 };
 
 USTRUCT(BlueprintType)
-struct FMyDamageEvent : public FDamageEvent
+struct FMyDamageEvent : public FRadialDamageEvent
 {
 
 	GENERATED_USTRUCT_BODY() //rend intelisense fou
 	uint8 dps;
-	uint8 effectChance;
+	float effectChance;
 };
 
 UCLASS()

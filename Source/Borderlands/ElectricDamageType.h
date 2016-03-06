@@ -3,15 +3,17 @@
 #pragma once
 
 #include "GameFramework/DamageType.h"
+#include "MyDamageType.h"
 #include "ElectricDamageType.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BORDERLANDS_API UElectricDamageType : public UDamageType
+class BORDERLANDS_API UElectricDamageType : public UMyDamageType
 {
 	GENERATED_BODY()
 public:
-		static FString getText();
+	virtual float getMultiplier(EAbsType absorderType);
+	FString getText();
 };

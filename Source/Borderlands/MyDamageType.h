@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/DamageType.h"
+#include "Absorber.h"
 #include "MyDamageType.generated.h"
 
 /**
@@ -11,9 +12,8 @@
 UCLASS()
 class BORDERLANDS_API UMyDamageType : public UDamageType
 {
-	GENERATED_BODY()
-		
+	GENERATED_BODY()	
 	public:
-		static int effectChance;
+		virtual float getMultiplier(EAbsType absorderType);
 	
 };

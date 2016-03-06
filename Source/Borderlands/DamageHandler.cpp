@@ -2,6 +2,7 @@
 
 #include "Borderlands.h"
 #include "DamageHandler.h"
+#include "weapon/Weapon.h"
 #include "Engine.h"
 
 // Sets default values for this component's properties
@@ -24,6 +25,7 @@ UDamageHandler::UDamageHandler()
 	abs->setMaxAmount(700);
 	absorbers.Add(abs);
 	abs = CreateDefaultSubobject<UAbsorber>(TEXT("Vie"));
+	abs->type = EAbsType::Flesh;
 	absorbers.Add(abs);
 	// ...
 }
@@ -58,11 +60,22 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 bool UDamageHandler::Damage(int damageAmount, FDamageEvent const & DamageEvent)
 {
+	FMyDamageEvent* f;
+	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
+		f = (FMyDamageEvent*)&DamageEvent;
+		if (FMath::SRand() < f->effectChance){
+			UE_LOG(LogTemp, Warning, TEXT("EFFET"));
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("PAS D EFFET"));
+		}
+	}
 	for (UAbsorber* abs : absorbers) {
 		damageAmount = abs->absorb(damageAmount, DamageEvent);
 	}
 	return damageAmount > 0;
 }
+
 
 
 

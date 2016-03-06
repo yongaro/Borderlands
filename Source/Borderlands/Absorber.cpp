@@ -2,6 +2,8 @@
 
 #include "Borderlands.h"
 #include "Absorber.h"
+#include "ElectricDamageType.h"
+
 
 
 // Sets default values for this component's properties
@@ -16,7 +18,7 @@ UAbsorber::UAbsorber()
 	regenRate = 20.f;
 	time = 0;
 	coolDown = 2;
-
+	type = EAbsType::Shield;
 	// ...
 }
 
@@ -65,13 +67,18 @@ int UAbsorber::getAmount()
 
 int UAbsorber::absorb(int damageAmount, FDamageEvent const & DamageEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Absorbing %i"), damageAmount);
+	float multiplier = 1.f;
+	UMyDamageType *DamageType = Cast<UMyDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
+	if (DamageType) {
+		multiplier = DamageType->getMultiplier(this->type);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Absorbing %i * %f"), damageAmount, multiplier);
 	int unAbsorbed = 0;
 	if (damageAmount > amount) {
 		unAbsorbed = damageAmount - amount;
 		UE_LOG(LogTemp, Warning, TEXT("%s didn't absorb %i"), *GetName(), unAbsorbed);
 	}
-	amount = FMath::Max(0, (int)amount - damageAmount);
+	amount = FMath::Max(0,(int)( amount - damageAmount*multiplier));
 	time = -coolDown;
 	return unAbsorbed;
 }

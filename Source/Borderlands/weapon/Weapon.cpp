@@ -37,7 +37,8 @@ AWeapon::AWeapon()
 	//CurrentState->Log();
 	bIsFiring = false;
 	damageEvent.DamageTypeClass = UElectricDamageType::StaticClass();
-	damageEvent.dps = 8;
+	damageEvent.dps = 15;
+	damageEvent.effectChance = 0.8f;
 	damageAmount = 80;
 }
 // Called when the game starts or when spawned
