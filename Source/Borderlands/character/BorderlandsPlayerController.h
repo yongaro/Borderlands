@@ -17,6 +17,7 @@ public:
 	ABorderlandsPlayerController();
 	~ABorderlandsPlayerController();
 	
+	virtual void BeginPlay();
 	virtual void SetupInputComponent();
 
 	//Movement commands
@@ -26,4 +27,18 @@ public:
 	void CommandGoRight(float value);
 	void CommandTurn(float value);
 	void CommandLookUp(float value);
+
+	//Inventory data
+	TArray<struct FWeaponInventoryItem> Weapons;
+	void SetupInventory();
+
+	//Inventory commands
+	void CommandChangeWeapon1();
+	void CommandChangeWeapon2();
+	void CommandChangeWeapon3();
+	void CommandChangeWeapon4();
+
+	//Weapon commands
+	void CommandFire();
+	void CommandStopFire();
 };

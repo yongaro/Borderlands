@@ -2,7 +2,8 @@
 
 #include "Borderlands.h"
 #include "Weapon.h"
-#include "CollidingPawn.h"
+//#include "CollidingPawn.h"
+#include "../character/BCharacter.h"
 #include "RifleWeaponTypeComponent.h"
 
 URifleWeaponTypeComponent::URifleWeaponTypeComponent()

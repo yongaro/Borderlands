@@ -21,6 +21,23 @@ struct FMyDamageEvent : public FRadialDamageEvent
 	float effectChance;
 };
 
+USTRUCT(BlueprintType)
+struct FWeaponInventoryItem
+{
+	GENERATED_USTRUCT_BODY() //je confirme
+
+public:
+	uint8 Damage;
+	float RateOfFire;
+	uint8 MagazineSize;
+	uint8 AmmunitionPool;
+	EManufacturer Manufacturer;
+	uint8 DamageAmount;
+	FMyDamageEvent DamageEvent;
+	TSubclassOf<class UWeaponTypeComponent> WeaponTypeComponentClass;
+	//A ajouter : Modele de l'arme
+};
+
 UCLASS()
 class BORDERLANDS_API AWeapon : public AActor
 {
@@ -36,39 +53,44 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	//Caractéristiques de l'arme
 	UPROPERTY(EditAnywhere, Category = Gameplay)
 		uint8 Damage;
-
 	UPROPERTY(EditAnywhere, Category = Gameplay)
 		float RateOfFire;
-
 	UPROPERTY(EditAnywhere, Category = Gameplay)
 		uint8 MagazineSize;
-
 	UPROPERTY(EditAnywhere, Category = Gameplay)
 		uint8 AmmunitionPool;
 	UPROPERTY(EditAnywhere, Category = Gameplay)
 		EManufacturer Manufacturer;
-	
+	uint8 damageAmount;
+	FMyDamageEvent damageEvent;
+
+	//Caractéristiques de l'instance de l'arme
+	uint8 currentAmmunitionInMagazine;
+	uint8 currentTotalAmmunition;
+	bool bIsFiring;
+
+	//Mécaniques de tir
 	void StartFire();
 	void EndFire();
 	bool BeginFiringSequence(bool bClientFired);
 	bool EndFiringSequence(bool bClientFired);
-
 	void FiringSequence(float DeltaTime);
 
+	//Manipulation des caractéristiques de l'arme
 	void reload();
 	void resupply();
+	void FromInventoryItem(FWeaponInventoryItem);
+	FWeaponInventoryItem ToInventoryItem();
 
-	class ACollidingPawn* Owner;
+	//Composants de l'acteur
+	//class ACollidingPawn* Owner;
+	class ABCharacter* Owner;
 	USkeletalMeshComponent* WeaponVisual;
-	uint8 currentAmmunitionInMagazine;
-	uint8 currentTotalAmmunition;
 	class UWeaponTypeComponent *WeaponTypeComponent;
 	class UWeaponState* CurrentState;
-	bool bIsFiring;
-	uint8 damageAmount;
-	FMyDamageEvent damageEvent;
 	
 };
 

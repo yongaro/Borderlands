@@ -7,6 +7,7 @@
 #include "WeaponStateActive.h"
 #include "WeaponTypeComponent.h"
 #include "ElectricDamageType.h"
+#include "../character/BCharacter.h"
 
 
 
@@ -32,7 +33,7 @@ AWeapon::AWeapon()
 	WeaponTypeComponent->OuterWeapon = this;
 
 	//Set default firing state
-	CurrentState = CreateDefaultSubobject<UWeaponStateActive>(TEXT("je sais pas")); //Nan sérieux pourquoi je dois utiliser ca et pas le keyword "new" ??
+	CurrentState = CreateDefaultSubobject<UWeaponStateActive>(TEXT("WeaponState")); //Attention : "new" fait crash UE
 	CurrentState->OuterWeapon = this;
 	//CurrentState->Log();
 	bIsFiring = false;
@@ -88,7 +89,7 @@ void AWeapon::FiringSequence(float DeltaTime)
 
 void AWeapon::StartFire()
 {
-	if (Owner != NULL && !Owner->IsFiringDisabled())
+	if (Owner != NULL && !Owner->bIsFiringDisabled)
 	{
 		bool bClientFired = BeginFiringSequence(false);
 		//Code réseau ici, avec checking de role et envoi de message au serveur
@@ -147,4 +148,37 @@ void AWeapon::reload()
 void AWeapon::resupply()
 {
 	currentAmmunitionInMagazine = MagazineSize;
+}
+
+void AWeapon::FromInventoryItem(FWeaponInventoryItem WeaponInventoryItem)
+{
+	Damage = WeaponInventoryItem.Damage;
+	RateOfFire = WeaponInventoryItem.RateOfFire;
+	MagazineSize = WeaponInventoryItem.MagazineSize;
+	AmmunitionPool = WeaponInventoryItem.AmmunitionPool;
+	Manufacturer = WeaponInventoryItem.Manufacturer;
+	damageAmount = WeaponInventoryItem.DamageAmount;
+	damageEvent = WeaponInventoryItem.DamageEvent;
+	UWeaponTypeComponent *NewWeaponTypeComponent = NewObject<UWeaponTypeComponent>(this, WeaponInventoryItem.WeaponTypeComponentClass);
+	if (NewWeaponTypeComponent != NULL)
+	{
+		NewWeaponTypeComponent->OuterWeapon = this;
+		NewWeaponTypeComponent->RegisterComponent();
+		WeaponTypeComponent->DestroyComponent();
+		WeaponTypeComponent = NewWeaponTypeComponent;
+	}
+}
+
+FWeaponInventoryItem AWeapon::ToInventoryItem()
+{
+	FWeaponInventoryItem Result;
+	Result.Damage = this->Damage;
+	Result.RateOfFire = this->RateOfFire;
+	Result.MagazineSize = this->MagazineSize;
+	Result.AmmunitionPool = this->AmmunitionPool;
+	Result.Manufacturer = this->Manufacturer;
+	Result.DamageAmount = this->damageAmount;
+	Result.DamageEvent = this->damageEvent;
+	Result.WeaponTypeComponentClass = this->WeaponTypeComponent->GetClass();
+	return Result;
 }

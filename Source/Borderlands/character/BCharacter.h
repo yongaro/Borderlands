@@ -32,4 +32,24 @@ public:
 	float BaseTurnRate;
 	float BaseLookUpRate;
 	UCameraComponent* CameraComponent;
+	USkeletalMeshComponent* FirstPersonMesh;
+	class UAnimSequence* IdleAnimation;
+
+	//Weapon system
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		TSubclassOf<class AWeapon> DefaultWeaponClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		FVector WeaponOffset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		FRotator WeaponRotation;
+	bool bIsFiringDisabled;
+	void onFire();
+	void onStopFire();
+	FVector GetCameraLocation();
+	FRotator GetCameraRotation();
+	void traceLine(FHitResult& HitResult);
+
+	//Inventory
+	class AWeapon* Weapon;
+	void SpawnWeapon(struct FWeaponInventoryItem);
 };

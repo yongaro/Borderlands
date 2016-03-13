@@ -78,7 +78,7 @@ void ACollidingPawn::BeginPlay()
 		}
 		else
 		{
-			Weapon->Owner = this;
+			//Weapon->Owner = this;
 			//On modifie une valeur de l'arme, puis on la reset
 			Weapon->MagazineSize = 30;
 			Weapon->RateOfFire = 0.1f;
