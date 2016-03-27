@@ -4,15 +4,18 @@
 #include "BorderlandsHUD.generated.h"
 
 UCLASS()
-class ABorderlandsHUD : public AHUD
+class BORDERLANDS_API ABorderlandsHUD : public AHUD
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
-public:
-	ABorderlandsHUD();
+	// Initializes the Slate UI and adds it as widget content to the game viewport.
+	virtual void PostInitializeComponents() override;
 
 	/** Primary draw call for the HUD */
 	virtual void DrawHUD() override;
+
+	// Reference to the Main Menu Slate UI.
+	TSharedPtr<class SInGameUI> InGameUI;
 
 private:
 	/** Crosshair asset pointer */

@@ -3,7 +3,7 @@
 #ifndef __BORDERLANDS_H__
 #define __BORDERLANDS_H__
 
-#include "EngineMinimal.h"
-
+#include "Engine.h"
+#include "SlateBasics.h"
 
 #endif

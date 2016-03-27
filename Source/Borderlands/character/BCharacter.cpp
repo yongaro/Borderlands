@@ -5,7 +5,7 @@
 #include "../weapon/WeaponTypeComponent.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
 #include "BCharacter.h"
-
+/*
 ENGINE_API void DrawDebugLine(
 	const UWorld* InWorld,
 	FVector const& LineStart,
@@ -15,7 +15,7 @@ ENGINE_API void DrawDebugLine(
 	float LifeTime = -1.f,
 	uint8 DepthPriority = 0,
 	float Thickness = 0.f
-	);
+	);*/
 
 // Sets default values
 ABCharacter::ABCharacter()

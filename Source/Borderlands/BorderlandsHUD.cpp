@@ -2,17 +2,33 @@
 
 #include "Borderlands.h"
 #include "BorderlandsHUD.h"
+#include "Engine.h"
 #include "Engine/Canvas.h"
 #include "TextureResource.h"
 #include "CanvasItem.h"
+#include "ui/SInGameUI.h"
 
-ABorderlandsHUD::ABorderlandsHUD()
+ABorderlandsHUD::ABorderlandsHUD(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	// Set the crosshair texture
 	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshiarTexObj(TEXT("/Game/FirstPerson/Textures/FirstPersonCrosshair"));
 	CrosshairTex = CrosshiarTexObj.Object;
 }
 
+
+void ABorderlandsHUD::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	
+	SAssignNew(InGameUI, SInGameUI).BorderlandsHUD(this);
+
+	if (GEngine->IsValidLowLevel())
+	{
+		GEngine->GameViewport->AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(InGameUI.ToSharedRef()));
+	}
+}
 
 void ABorderlandsHUD::DrawHUD()
 {
