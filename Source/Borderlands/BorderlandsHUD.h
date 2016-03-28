@@ -17,6 +17,13 @@ class BORDERLANDS_API ABorderlandsHUD : public AHUD
 	// Reference to the Main Menu Slate UI.
 	TSharedPtr<class SInGameUI> InGameUI;
 
+	//Update methods
+	void UpdateAmmunitionAmount(uint8 AmmoInMagazine, uint8 AmmoInReserve);
+
+	//HUD information to display
+	uint8 AmmoInMagazine;
+	uint8 AmmoInReserve;
+
 private:
 	/** Crosshair asset pointer */
 	class UTexture2D* CrosshairTex;

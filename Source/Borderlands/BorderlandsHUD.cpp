@@ -14,6 +14,9 @@ ABorderlandsHUD::ABorderlandsHUD(const FObjectInitializer& ObjectInitializer)
 	// Set the crosshair texture
 	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshiarTexObj(TEXT("/Game/FirstPerson/Textures/FirstPersonCrosshair"));
 	CrosshairTex = CrosshiarTexObj.Object;
+
+	AmmoInMagazine = 0;
+	AmmoInReserve = 0;
 }
 
 
@@ -23,6 +26,7 @@ void ABorderlandsHUD::PostInitializeComponents()
 
 	
 	SAssignNew(InGameUI, SInGameUI).BorderlandsHUD(this);
+	UE_LOG(LogTemp, Warning, TEXT("SAssignNew"));
 
 	if (GEngine->IsValidLowLevel())
 	{
@@ -47,5 +51,11 @@ void ABorderlandsHUD::DrawHUD()
 	FCanvasTileItem TileItem( CrosshairDrawPosition, CrosshairTex->Resource, FLinearColor::White);
 	TileItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem( TileItem );
+}
+
+void ABorderlandsHUD::UpdateAmmunitionAmount(uint8 AmmoInMagazine, uint8 AmmoInReserve)
+{
+	this->AmmoInMagazine = AmmoInMagazine;
+	this->AmmoInReserve = AmmoInReserve;
 }
 

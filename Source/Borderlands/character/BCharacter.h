@@ -48,6 +48,7 @@ public:
 	FVector GetCameraLocation();
 	FRotator GetCameraRotation();
 	void traceLine(FHitResult& HitResult);
+	void updateAmmunitionAmountOnHUD(uint8 AmmunitionInMagazine, uint8 AmmunitionInReserve);
 
 	//Inventory
 	class AWeapon* Weapon;

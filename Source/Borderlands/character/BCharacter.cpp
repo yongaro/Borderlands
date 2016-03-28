@@ -4,6 +4,7 @@
 #include "../weapon/Weapon.h"
 #include "../weapon/WeaponTypeComponent.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
+#include "BorderlandsPlayerController.h"
 #include "BCharacter.h"
 /*
 ENGINE_API void DrawDebugLine(
@@ -172,7 +173,22 @@ void ABCharacter::traceLine(FHitResult & HitResult)
 	if (World != NULL)
 	{
 		DrawDebugLine(World, CameraLoc, EndTrace, FColor(255, 0, 0), false, 0.2f, 0, 5);
+		Weapon->currentAmmunitionInMagazine = Weapon->currentAmmunitionInMagazine - 1;
+		this->updateAmmunitionAmountOnHUD(Weapon->currentAmmunitionInMagazine, Weapon->currentTotalAmmunition);
 		World->LineTraceSingleByChannel(HitResult, CameraLoc, EndTrace, ECC_GameTraceChannel1, TraceParams);
+	}
+}
+
+void ABCharacter::updateAmmunitionAmountOnHUD(uint8 AmmunitionInMagazine, uint8 AmmunitionInReserve)
+{
+	ABorderlandsPlayerController* PlayerController = Cast<ABorderlandsPlayerController>(GetController());
+	if (PlayerController != NULL)
+	{
+		PlayerController->UpdateAmmunitionAmountOnHUD(AmmunitionInMagazine, AmmunitionInReserve);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsPlayerController instance"));
 	}
 }
 
@@ -199,6 +215,7 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 			Weapon->Owner = this;
 			Weapon->FromInventoryItem(WeaponInventoryItem);
 			Weapon->resupply();
+			updateAmmunitionAmountOnHUD(Weapon->currentAmmunitionInMagazine, Weapon->currentTotalAmmunition);
 			//Weapon->AttachRootComponentTo(CameraComponent, NAME_None, EAttachLocation::SnapToTarget);
 		}
 	}

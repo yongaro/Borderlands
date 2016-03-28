@@ -5,6 +5,7 @@
 #include "../weapon/Weapon.h"
 #include "../ElectricDamageType.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
+#include "../BorderlandsHUD.h"
 #include "BorderlandsPlayerController.h"
 
 ABorderlandsPlayerController::ABorderlandsPlayerController()
@@ -175,5 +176,18 @@ void ABorderlandsPlayerController::CommandStopFire()
 	if (ControlledCharacter != NULL)
 	{
 		ControlledCharacter->onStopFire();
+	}
+}
+
+void ABorderlandsPlayerController::UpdateAmmunitionAmountOnHUD(uint8 AmmoInMagazine, uint8 AmmoInReserve)
+{
+	ABorderlandsHUD* BorderlandsHUD = Cast<ABorderlandsHUD>(GetHUD());
+	if (BorderlandsHUD != NULL)
+	{
+		BorderlandsHUD->UpdateAmmunitionAmount(AmmoInMagazine, AmmoInReserve);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsHUD instance"));
 	}
 }

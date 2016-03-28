@@ -21,4 +21,7 @@ public:
 
 	// Stores a weak reference to the HUD controlling this class.
 	TWeakObjectPtr<class ABorderlandsHUD> BorderlandsHUD;
+
+	//Delegates methods for updates
+	FText GetAmmunitionText() const;
 };
