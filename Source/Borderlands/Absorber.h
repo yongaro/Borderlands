@@ -27,11 +27,9 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
-	virtual void setMaxAmount(int32 maxAmount);
-	virtual void setRegenRate(float regentRate);
-	virtual void setCoolDown(float coolDown);
 
 	virtual int getAmount();
+	virtual int getMaxAmount();
 	virtual int absorb(int damageAmount, FDamageEvent const & DamageEvent);
 	virtual void InitializeComponent() override;
 	virtual void regen(float DeltaTime);

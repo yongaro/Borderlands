@@ -4,11 +4,12 @@
 
 #include "Components/ActorComponent.h"
 #include "Absorber.h"
+#include "CharacterStatusInterface.h"
 #include "DamageHandler.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BORDERLANDS_API UDamageHandler : public UActorComponent
+class BORDERLANDS_API UDamageHandler : public UActorComponent , public ICharacterStatusInterface
 {
 	GENERATED_BODY()
 
@@ -22,8 +23,22 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 	virtual void InitializeComponent() override;
+
 	virtual bool Damage(int damageAmount, FDamageEvent const & DamageEvent);
+	virtual void addAbsorber(UAbsorber* abs);
+
 
 	TArray<UAbsorber*> absorbers;
-	
+
+
+
+	// Hérité via ICharacterStatusInterface
+	virtual uint8 getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber);
+
+	virtual uint8 getAbsorberAmount_Implementation(uint8 indexOfAbsorber);
+
+	virtual uint8 getAbsorberCount_Implementation();
+
+	virtual bool HasAbsorberOfType_Implementation(EAbsType abstype);
+
 };

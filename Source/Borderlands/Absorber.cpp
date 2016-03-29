@@ -15,17 +15,13 @@ UAbsorber::UAbsorber()
 	bWantsBeginPlay = true;
 	bWantsInitializeComponent = true;
 	PrimaryComponentTick.bCanEverTick = true;
-	maxAmount = 350; /*dummy default values*/
+	maxAmount = 300; /*dummy default values*/
 	amount = 0;
 	regenRate = 20.f;
 	time = 0;
 	coolDown = 2;
 	type = EAbsType::Shield;
-	/*UActorComponent* comp= GetOwner()->FindComponentByClass(UDamageHandler::StaticClass());
-	UDamageHandler *dmg = Cast<UDamageHandler>(comp);
-	if (dmg) {
-		dmg->absorbers.Add(this);
-	}*/
+
 	// ...
 }
 
@@ -51,29 +47,20 @@ void UAbsorber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	// ...
 }
 
-void UAbsorber::setMaxAmount(int32 maxAmount)
-{
-	this->maxAmount = maxAmount;
-	amount = maxAmount;
-}
-
-void UAbsorber::setRegenRate(float regenRate)
-{
-	this->regenRate = regenRate;
-}
-
-void UAbsorber::setCoolDown(float coolDown)
-{
-	this->coolDown = coolDown;
-}
 
 int UAbsorber::getAmount()
 {
 	return amount;
 }
 
+int UAbsorber::getMaxAmount()
+{
+	return maxAmount;
+}
+
 int UAbsorber::absorb(int damageAmount, FDamageEvent const & DamageEvent)
 {
+	PrimaryComponentTick.SetTickFunctionEnable(true);
 	float multiplier = 1.f;
 	UMyDamageType *DamageType = Cast<UMyDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
 	if (DamageType) {
@@ -95,7 +82,7 @@ void UAbsorber::InitializeComponent()
 	UActorComponent* comp = GetOwner()->FindComponentByClass(UDamageHandler::StaticClass());
 	UDamageHandler *dmg = Cast<UDamageHandler>(comp);
 	if (dmg) {
-		dmg->absorbers.Add(this);
+		dmg->addAbsorber(this);
 	}
 }
 
@@ -105,6 +92,12 @@ void UAbsorber::regen(float DeltaTime)
 		float newAmount = amount + regenRate*DeltaTime;
 		amount = fmin(maxAmount, newAmount);
 	}
+	else {
+		
+		UE_LOG(LogTemp, Warning, TEXT("Disabling tick"));
+		PrimaryComponentTick.SetTickFunctionEnable(false);
+	}
+
 }
 
 

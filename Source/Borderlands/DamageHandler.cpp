@@ -14,22 +14,10 @@ UDamageHandler::UDamageHandler()
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 	bWantsInitializeComponent = true;
-	/*health = 10;
-	maxHealth = 350;
-	regenRate = 50.f;
-	time = 0;*/
-	//armor = CreateDefaultSubobject<UAbsorber>(TEXT("Amount"));
-	//absorbers = TArray<UAbsorbers*>();
-	/*Example*/
-	/*UAbsorber* abs = CreateDefaultSubobject<UAbsorber>(TEXT("Armure"));
-	abs->setCoolDown(2.5f);
-	abs->setRegenRate(200.f);
-	abs->setMaxAmount(700);
-	absorbers.Add(abs);
-	abs = CreateDefaultSubobject<UAbsorber>(TEXT("Vie"));
-	abs->type = EAbsType::Flesh;
-	absorbers.Add(abs);*/
-	// ...
+	UAbsorber* temp=CreateDefaultSubobject<UAbsorber>("Life");
+	temp->type = EAbsType::Flesh;
+	absorbers.Add(temp);
+	
 }
 
 
@@ -49,7 +37,7 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	FString s=GetOwner()->GetName();
 	for (UAbsorber* abs : absorbers) {
-		s += " - " + abs->GetName();
+		s += " - " + abs->GetName()+ " : ";
 		s.AppendInt(abs->amount);
 	}
 	GEngine->AddOnScreenDebugMessage(
@@ -64,9 +52,11 @@ void UDamageHandler::InitializeComponent()
 {
 	ADamageActor *dmg = Cast<ADamageActor>(GetOwner());
 	if (dmg) {
-		dmg->dmgHandler = this;
+		dmg->dmgHandler = this; 
 	}
 }
+
+
 
 bool UDamageHandler::Damage(int damageAmount, FDamageEvent const & DamageEvent)
 {
@@ -84,6 +74,45 @@ bool UDamageHandler::Damage(int damageAmount, FDamageEvent const & DamageEvent)
 		damageAmount = abs->absorb(damageAmount, DamageEvent);
 	}
 	return damageAmount > 0;
+}
+
+void UDamageHandler::addAbsorber(UAbsorber * abs)
+{
+	if (!absorbers.Contains(abs)) {
+		absorbers.Insert(abs, 0);
+	}
+}
+
+uint8 UDamageHandler::getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber)
+{
+	if (absorbers.IsValidIndex(indexOfAbsorber))
+		return absorbers[indexOfAbsorber]->getMaxAmount();
+	UE_LOG(LogTemp, Warning, TEXT("Invalid index"));
+	return 0;
+}
+
+uint8 UDamageHandler::getAbsorberAmount_Implementation(uint8 indexOfAbsorber)
+{
+	if (absorbers.IsValidIndex(indexOfAbsorber))
+		return absorbers[indexOfAbsorber]->getAmount();
+	UE_LOG(LogTemp, Warning, TEXT("Invalid index"));
+	return 0;
+}
+
+
+uint8 UDamageHandler::getAbsorberCount_Implementation()
+{
+	uint8 count = absorbers.Num();
+	return count;
+}
+
+bool UDamageHandler::HasAbsorberOfType_Implementation(EAbsType abstype)
+{
+	for (UAbsorber* a : absorbers) {
+		if (a->type == abstype)
+			return true;
+	}
+	return false;
 }
 
 
