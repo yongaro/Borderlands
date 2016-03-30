@@ -2,7 +2,7 @@
 
 #include "Borderlands.h"
 #include "DamageHandler.h"
-#include "weapon/Weapon.h"
+
 #include "DamageActor.h"
 #include "Engine.h"
 
@@ -17,6 +17,7 @@ UDamageHandler::UDamageHandler()
 	UAbsorber* temp=CreateDefaultSubobject<UAbsorber>("Life");
 	temp->type = EAbsType::Flesh;
 	absorbers.Add(temp);
+	dotTimer = 0;
 	
 }
 
@@ -25,7 +26,6 @@ UDamageHandler::UDamageHandler()
 void UDamageHandler::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
 
 }
@@ -46,6 +46,18 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		FColor::Red,
 		FString::Printf(TEXT("%s"), *s));
 	// ...
+
+	if (dotCount > 0 && dotTimer > 60) {
+		UE_LOG(LogTemp, Warning, TEXT("Application du DOT"));
+		dotTimer = 0;
+		dotCount--;
+		Damage(dot->dps,*dot);
+	}
+	else {
+		if (dotCount > 0) {
+			dotTimer += DeltaTime;
+		}
+	}
 }
 
 void UDamageHandler::InitializeComponent()
@@ -56,25 +68,6 @@ void UDamageHandler::InitializeComponent()
 	}
 }
 
-
-
-bool UDamageHandler::Damage(int damageAmount, FDamageEvent const & DamageEvent)
-{
-	FMyDamageEvent* f;
-	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
-		f = (FMyDamageEvent*)&DamageEvent;
-		if (FMath::SRand() < f->effectChance){
-			UE_LOG(LogTemp, Warning, TEXT("EFFET"));
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("PAS D EFFET"));
-		}
-	}
-	for (UAbsorber* abs : absorbers) {
-		damageAmount = abs->absorb(damageAmount, DamageEvent);
-	}
-	return damageAmount > 0;
-}
 
 void UDamageHandler::addAbsorber(UAbsorber * abs)
 {
@@ -114,6 +107,45 @@ bool UDamageHandler::HasAbsorberOfType_Implementation(EAbsType abstype)
 	}
 	return false;
 }
+
+bool UDamageHandler::Damage_Implementation(uint8 damageAmount, const FDamageEvent &DamageEvent)
+{
+	FMyDamageEvent* f;
+	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
+		f = (FMyDamageEvent*)&DamageEvent;
+		if (FMath::SRand() < f->effectChance) {
+			UE_LOG(LogTemp, Warning, TEXT("EFFET"));
+			dot = f;
+			dotCount = 5; //durée des effets ?
+			dotTimer = 0;
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("PAS D EFFET"));
+		}
+	}
+	for (UAbsorber* abs : absorbers) {
+		damageAmount = abs->absorb(damageAmount, DamageEvent);
+	}
+	return absorbers.Last()->getAmount() <= 0;
+}
+
+/*bool UDamageHandler::Damage_Implementation(uint8 damageAmount, FDamageEvent const & DamageEvent)
+{
+	FMyDamageEvent* f;
+	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
+		f = (FMyDamageEvent*)&DamageEvent;
+		if (FMath::SRand() < f->effectChance) {
+			UE_LOG(LogTemp, Warning, TEXT("EFFET"));
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("PAS D EFFET"));
+		}
+	}
+	for (UAbsorber* abs : absorbers) {
+		damageAmount = abs->absorb(damageAmount, DamageEvent);
+	}
+	return damageAmount > 0;
+}*/
 
 
 

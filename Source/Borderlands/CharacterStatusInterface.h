@@ -29,5 +29,6 @@ public:
 		uint8 getAbsorberAmount(uint8 indexOfAbsorber);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Item")
 		uint8 getAbsorberMaxAmount(uint8 indexOfAbsorber);
-
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Item")
+		bool Damage(uint8 damageAmount, FDamageEvent const & DamageEvent);
 };

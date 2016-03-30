@@ -4,6 +4,7 @@
 
 #include "Components/ActorComponent.h"
 #include "Absorber.h"
+#include "weapon/Weapon.h"
 #include "CharacterStatusInterface.h"
 #include "DamageHandler.generated.h"
 
@@ -24,13 +25,8 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 	virtual void InitializeComponent() override;
 
-	virtual bool Damage(int damageAmount, FDamageEvent const & DamageEvent);
+	
 	virtual void addAbsorber(UAbsorber* abs);
-
-
-	TArray<UAbsorber*> absorbers;
-
-
 
 	// Hérité via ICharacterStatusInterface
 	virtual uint8 getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber);
@@ -40,5 +36,15 @@ public:
 	virtual uint8 getAbsorberCount_Implementation();
 
 	virtual bool HasAbsorberOfType_Implementation(EAbsType abstype);
+
+	virtual bool Damage_Implementation(uint8 damageAmount, const FDamageEvent &DamageEvent);
+
+private:
+	TArray<UAbsorber*> absorbers;
+	float dotTimer;
+	uint8 dotCount;
+	FMyDamageEvent* dot;
+
+	
 
 };
