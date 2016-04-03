@@ -8,7 +8,7 @@ ASpawnerTrigger::ASpawnerTrigger()
 {
 }
 
-void ASpawnerTrigger::OverlapStart()
+void ASpawnerTrigger::OverlapStart(AActor* OtherActor)
 {
 
 	TArray<AActor*> ovAct;
@@ -21,5 +21,5 @@ void ASpawnerTrigger::OverlapStart()
 			triggerActions.Add(spawner);
 		}
 	}
-	Super::OverlapStart();
+	Super::OverlapStart(OtherActor);
 }

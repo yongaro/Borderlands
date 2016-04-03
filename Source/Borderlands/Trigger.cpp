@@ -38,7 +38,7 @@ void ATrigger::OnTriggerOverlapBegin(AActor * OtherActor, UPrimitiveComponent * 
 {
 	if (OtherActor != NULL && OtherActor != this ) {
 		UE_LOG(LogTemp, Warning, TEXT("OnTriggerOverlapBegin"));
-		OverlapStart();
+		OverlapStart(OtherActor);
 	}
 }
 void ATrigger::OnTriggerOverlapEnd(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -57,19 +57,19 @@ bool ATrigger::addObjectToTrigger(UObject* obj) {
 	return false;
 }
 
-void ATrigger::OverlapStart()
+void ATrigger::OverlapStart(AActor* OtherActor)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OverlapStart"));
 	for (UObject* o : triggerActions) {
-		ITriggerableInterface::Execute_onTriggerActivated(o);
+		ITriggerableInterface::Execute_onTriggerActivated(o,OtherActor);
 	}
 }
 
-void ATrigger::OverlapEnd()
+void ATrigger::OverlapEnd(AActor* OtherActor)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OverlapEnd"));
 	for (UObject* o : triggerActions) {
-		ITriggerableInterface::Execute_onTriggerDesactivated(o);
+		ITriggerableInterface::Execute_onTriggerDesactivated(o, OtherActor);
 	}
 }
 

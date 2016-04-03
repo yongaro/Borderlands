@@ -19,5 +19,5 @@ class BORDERLANDS_API ASpawnerTrigger : public ATrigger
 	// Called every frame
 	//virtual void Tick(float DeltaSeconds) override;
 	private:
-		virtual void OverlapStart() override;
+		virtual void OverlapStart(AActor* OtherActor) override;
 };

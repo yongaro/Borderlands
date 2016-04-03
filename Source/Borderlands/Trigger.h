@@ -35,6 +35,6 @@ protected:
 	/*Tableau des actions a trigger*/
 	TArray<UObject*> triggerActions;
 	/*Override this*/
-	virtual void OverlapStart();
-	virtual void OverlapEnd();
+	virtual void OverlapStart(AActor* OtherActor);
+	virtual void OverlapEnd(AActor* OtherActor);
 };

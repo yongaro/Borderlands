@@ -50,12 +50,12 @@ void ASpawnActor::spawn() {
 	}
 }
 
-bool ASpawnActor::onTriggerDesactivated_Implementation()
+bool ASpawnActor::onTriggerDesactivated_Implementation(AActor* OtherActor)
 {
 	return false;
 }
 
-bool ASpawnActor::onTriggerActivated_Implementation()
+bool ASpawnActor::onTriggerActivated_Implementation(AActor* OtherActor)
 {
 	spawn();
 	return true;
