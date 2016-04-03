@@ -10,14 +10,16 @@ ASpawnerTrigger::ASpawnerTrigger()
 
 void ASpawnerTrigger::OverlapStart()
 {
-	UE_LOG(LogTemp, Warning, TEXT("getting spawners"));
 
 	TArray<AActor*> ovAct;
 	TriggerBox->GetOverlappingActors(ovAct,ASpawnActor::StaticClass());
+	UE_LOG(LogTemp, Warning, TEXT("Getting spawners %i"),ovAct.Num());
+
 	for (AActor* sa : ovAct) {
 		ASpawnActor* spawner = Cast<ASpawnActor>(sa);
 		if (spawner!=NULL) {
-			spawner->spawn();
+			triggerActions.Add(spawner);
 		}
 	}
+	Super::OverlapStart();
 }

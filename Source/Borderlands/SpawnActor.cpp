@@ -50,3 +50,14 @@ void ASpawnActor::spawn() {
 	}
 }
 
+bool ASpawnActor::onTriggerDesactivated_Implementation()
+{
+	return false;
+}
+
+bool ASpawnActor::onTriggerActivated_Implementation()
+{
+	spawn();
+	return true;
+}
+

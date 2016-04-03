@@ -36,20 +36,41 @@ void ATrigger::Tick(float DeltaTime)
 
 void ATrigger::OnTriggerOverlapBegin(AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor != NULL && OtherActor != this) {
+	if (OtherActor != NULL && OtherActor != this ) {
+		UE_LOG(LogTemp, Warning, TEXT("OnTriggerOverlapBegin"));
 		OverlapStart();
 	}
 }
 void ATrigger::OnTriggerOverlapEnd(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
-	if (OtherActor != NULL && OtherActor != this)
-		UE_LOG(LogTemp, Warning, TEXT("TriggerDesactivated"));
+	if (OtherActor != NULL && OtherActor != this ) {
+		UE_LOG(LogTemp, Warning, TEXT("OnTriggerOverlapEnd"));
+	}	
+}
+
+bool ATrigger::addObjectToTrigger(UObject* obj) {
+	if (obj->GetClass()->ImplementsInterface(UTriggerableInterface::StaticClass())) {
+		triggerActions.Add(obj);
+		return true;
+	}
+	return false;
 }
 
 void ATrigger::OverlapStart()
 {
-	UE_LOG(LogTemp, Warning, TEXT("TriggerActivated"));
+	UE_LOG(LogTemp, Warning, TEXT("OverlapStart"));
+	for (UObject* o : triggerActions) {
+		ITriggerableInterface::Execute_onTriggerActivated(o);
+	}
+}
+
+void ATrigger::OverlapEnd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OverlapEnd"));
+	for (UObject* o : triggerActions) {
+		ITriggerableInterface::Execute_onTriggerDesactivated(o);
+	}
 }
 
 

@@ -3,13 +3,15 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "TriggerableInterface.h"
 #include "SpawnActor.generated.h"
 
 UCLASS()
-class BORDERLANDS_API ASpawnActor : public AActor
+class BORDERLANDS_API ASpawnActor : public AActor , public ITriggerableInterface
 {
 	GENERATED_BODY()
 	UStaticMeshComponent* Mesh;
+
 public:	
 	// Sets default values for this actor's properties
 	ASpawnActor();
@@ -27,4 +29,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Config")
 		bool bDestroyWhenFinished;
 	virtual void spawn();
+
+	// Hérité via ITriggerableInterface
+	virtual bool onTriggerDesactivated_Implementation();
+	virtual bool onTriggerActivated_Implementation();
 };
