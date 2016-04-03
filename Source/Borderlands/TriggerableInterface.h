@@ -20,7 +20,7 @@ class BORDERLANDS_API ITriggerableInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Item")
-		bool onTriggerActivated();
+		bool onTriggerActivated(AActor* OtherActor);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Item")
-		bool onTriggerDesactivated();
+		bool onTriggerDesactivated(AActor* OtherActor);
 };

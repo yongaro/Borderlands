@@ -31,6 +31,6 @@ public:
 	virtual void spawn();
 
 	// Hérité via ITriggerableInterface
-	virtual bool onTriggerDesactivated_Implementation();
-	virtual bool onTriggerActivated_Implementation();
+	virtual bool onTriggerDesactivated_Implementation(AActor* OtherActor);
+	virtual bool onTriggerActivated_Implementation(AActor* OtherActor);
 };
