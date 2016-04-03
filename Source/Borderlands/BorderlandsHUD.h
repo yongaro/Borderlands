@@ -19,10 +19,22 @@ class BORDERLANDS_API ABorderlandsHUD : public AHUD
 
 	//Update methods
 	void UpdateAmmunitionAmount(uint8 AmmoInMagazine, uint8 AmmoInReserve);
+	void UpdateHealthAmount(bool HasHealthAmount, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount);
 
-	//HUD information to display
+	/*-----HUD information to display-----*/
+	//Ammunition
 	uint8 AmmoInMagazine;
 	uint8 AmmoInReserve;
+	//Absorbers
+	bool HasHealthAbsorber;
+	uint8 CurrentHealthAmount;
+	uint8 MaximumHealthAmount;
+	bool HasShieldAbsorber;
+	uint8 CurrentShieldAmount;
+	uint8 MaximumShieldAmount;
+	bool HasArmorAbsorber;
+	uint8 CurrentArmorAmount;
+	uint8 MaximumArmorAmount;
 
 private:
 	/** Crosshair asset pointer */

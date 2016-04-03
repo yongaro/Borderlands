@@ -192,6 +192,19 @@ void ABCharacter::updateAmmunitionAmountOnHUD(uint8 AmmunitionInMagazine, uint8 
 	}
 }
 
+void ABCharacter::UpdateHealthAmountOnHUD(bool HasHealthAmount, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount)
+{
+	ABorderlandsPlayerController* PlayerController = Cast<ABorderlandsPlayerController>(GetController());
+	if (PlayerController != NULL)
+	{
+		PlayerController->UpdateHealthAmountOnHUD(HasHealthAmount, CurrentHealthAmount, MaximumHealthAmount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsPlayerController instance"));
+	}
+}
+
 void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 {
 	UWorld* World = GetWorld();

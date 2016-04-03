@@ -28,6 +28,8 @@ public:
 	
 	virtual void addAbsorber(UAbsorber* abs);
 
+	virtual void updateHUD();
+
 	// Hérité via ICharacterStatusInterface
 	virtual uint8 getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber);
 

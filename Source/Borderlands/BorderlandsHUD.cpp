@@ -17,6 +17,10 @@ ABorderlandsHUD::ABorderlandsHUD(const FObjectInitializer& ObjectInitializer)
 
 	AmmoInMagazine = 0;
 	AmmoInReserve = 0;
+
+	HasHealthAbsorber = true;
+	CurrentHealthAmount = 5;
+	MaximumHealthAmount = 5;
 }
 
 
@@ -57,5 +61,12 @@ void ABorderlandsHUD::UpdateAmmunitionAmount(uint8 AmmoInMagazine, uint8 AmmoInR
 {
 	this->AmmoInMagazine = AmmoInMagazine;
 	this->AmmoInReserve = AmmoInReserve;
+}
+
+void ABorderlandsHUD::UpdateHealthAmount(bool HasHealthAbsorber, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount)
+{
+	this->HasHealthAbsorber = HasHealthAbsorber;
+	this->CurrentHealthAmount = CurrentHealthAmount;
+	this->MaximumHealthAmount = MaximumHealthAmount;
 }
 

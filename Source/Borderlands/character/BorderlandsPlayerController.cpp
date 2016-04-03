@@ -191,3 +191,16 @@ void ABorderlandsPlayerController::UpdateAmmunitionAmountOnHUD(uint8 AmmoInMagaz
 		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsHUD instance"));
 	}
 }
+
+void ABorderlandsPlayerController::UpdateHealthAmountOnHUD(bool HasHealthAmount, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount)
+{
+	ABorderlandsHUD* BorderlandsHUD = Cast<ABorderlandsHUD>(GetHUD());
+	if (BorderlandsHUD != NULL)
+	{
+		BorderlandsHUD->UpdateHealthAmount(HasHealthAmount, CurrentHealthAmount, MaximumHealthAmount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsHUD instance"));
+	}
+}

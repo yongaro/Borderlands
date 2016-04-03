@@ -22,6 +22,10 @@ public:
 	// Stores a weak reference to the HUD controlling this class.
 	TWeakObjectPtr<class ABorderlandsHUD> BorderlandsHUD;
 
+	//Predicates for absorber bars
+	EVisibility HasHealthAbsorber() const;
+
 	//Delegates methods for updates
 	FText GetAmmunitionText() const;
+	TOptional< float > GetHealthPercentage() const;
 };

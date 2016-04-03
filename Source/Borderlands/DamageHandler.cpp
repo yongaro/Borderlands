@@ -2,7 +2,7 @@
 
 #include "Borderlands.h"
 #include "DamageHandler.h"
-
+#include "character/BCharacter.h"
 #include "DamageActor.h"
 #include "Engine.h"
 
@@ -66,6 +66,9 @@ void UDamageHandler::InitializeComponent()
 	if (dmg) {
 		dmg->dmgHandler = this; 
 	}
+
+	//Init HUD on player
+	updateHUD();
 }
 
 
@@ -73,6 +76,18 @@ void UDamageHandler::addAbsorber(UAbsorber * abs)
 {
 	if (!absorbers.Contains(abs)) {
 		absorbers.Insert(abs, 0);
+	}
+}
+
+void UDamageHandler::updateHUD()
+{
+	ABCharacter* BCharacter = Cast<ABCharacter>(GetOwner());
+	if (BCharacter)
+	{
+		if (this->HasAbsorberOfType(EAbsType::Flesh))
+		{
+			BCharacter->UpdateHealthAmountOnHUD(true, this->getAbsorberAmount(0), this->getAbsorberMaxAmount(0));
+		}
 	}
 }
 
@@ -126,6 +141,8 @@ bool UDamageHandler::Damage_Implementation(uint8 damageAmount, const FDamageEven
 	for (UAbsorber* abs : absorbers) {
 		damageAmount = abs->absorb(damageAmount, DamageEvent);
 	}
+
+	updateHUD();
 	return absorbers.Last()->getAmount() <= 0;
 }
 
