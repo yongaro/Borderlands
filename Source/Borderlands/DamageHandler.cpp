@@ -76,20 +76,22 @@ void UDamageHandler::addAbsorber(UAbsorber * abs)
 	}
 }
 
-uint8 UDamageHandler::getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber)
+uint8 UDamageHandler::getAbsorberMaxAmount_Implementation(EAbsType abstype)
 {
-	if (absorbers.IsValidIndex(indexOfAbsorber))
-		return absorbers[indexOfAbsorber]->getMaxAmount();
-	UE_LOG(LogTemp, Warning, TEXT("Invalid index"));
-	return 0;
+	for (UAbsorber* a : absorbers) {
+		if (a->type == abstype)
+			return a->getMaxAmount();
+	}
+	return -1;
 }
 
-uint8 UDamageHandler::getAbsorberAmount_Implementation(uint8 indexOfAbsorber)
+uint8 UDamageHandler::getAbsorberAmount_Implementation(EAbsType abstype)
 {
-	if (absorbers.IsValidIndex(indexOfAbsorber))
-		return absorbers[indexOfAbsorber]->getAmount();
-	UE_LOG(LogTemp, Warning, TEXT("Invalid index"));
-	return 0;
+	for (UAbsorber* a : absorbers) {
+		if (a->type == abstype)
+			return a->getAmount();
+	}
+	return -1;
 }
 
 

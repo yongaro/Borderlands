@@ -29,9 +29,9 @@ public:
 	virtual void addAbsorber(UAbsorber* abs);
 
 	// Hérité via ICharacterStatusInterface
-	virtual uint8 getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber);
+	virtual uint8 getAbsorberMaxAmount_Implementation(EAbsType abstype);
 
-	virtual uint8 getAbsorberAmount_Implementation(uint8 indexOfAbsorber);
+	virtual uint8 getAbsorberAmount_Implementation(EAbsType abstype);
 
 	virtual uint8 getAbsorberCount_Implementation();
 
