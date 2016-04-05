@@ -52,9 +52,11 @@ void SInGameUI::Construct(const FArguments& InArgs)
 					.WidthOverride(600.0f)
 					[
 						SNew(SProgressBar)
+						.Visibility(this, &SInGameUI::HasHealthAbsorber)
 						.BarFillType(EProgressBarFillType::LeftToRight)
 						.FillColorAndOpacity(FLinearColor::Red)
-						.Percent(0.5f)
+						//.Percent(0.5f)
+						.Percent(this, &SInGameUI::GetHealthPercentage)
 					]
 				]
 			]
@@ -65,8 +67,27 @@ void SInGameUI::Construct(const FArguments& InArgs)
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
+EVisibility SInGameUI::HasHealthAbsorber() const
+{
+	if (BorderlandsHUD->HasHealthAbsorber)
+	{
+		return EVisibility::Visible;
+	}
+	return EVisibility::Collapsed;
+}
+
 FText SInGameUI::GetAmmunitionText() const
 {
 	FString AmmunitionText = FString::FromInt(BorderlandsHUD->AmmoInMagazine) + " / " + FString::FromInt(BorderlandsHUD->AmmoInReserve);
 	return FText::FromString(AmmunitionText);
+}
+
+TOptional< float > SInGameUI::GetHealthPercentage() const
+{
+	if (HasHealthAbsorber() == EVisibility::Visible)
+	{
+		float res = BorderlandsHUD->CurrentHealthAmount / BorderlandsHUD->MaximumHealthAmount;
+		return res;
+	}
+	return 0.f;
 }
