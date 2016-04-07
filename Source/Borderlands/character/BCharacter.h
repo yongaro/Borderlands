@@ -49,6 +49,7 @@ public:
 	FRotator GetCameraRotation();
 	void traceLine(FHitResult& HitResult);
 	void updateAmmunitionAmountOnHUD(uint8 AmmunitionInMagazine, uint8 AmmunitionInReserve);
+	void UpdateHealthAmountOnHUD(bool HasHealthAmount, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount);
 
 	//Inventory
 	class AWeapon* Weapon;

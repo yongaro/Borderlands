@@ -79,9 +79,6 @@ void UDamageHandler::addAbsorber(UAbsorber * abs)
 	}
 }
 
-<<<<<<< HEAD
-uint8 UDamageHandler::getAbsorberMaxAmount_Implementation(EAbsType abstype)
-=======
 void UDamageHandler::updateHUD()
 {
 	ABCharacter* BCharacter = Cast<ABCharacter>(GetOwner());
@@ -89,13 +86,12 @@ void UDamageHandler::updateHUD()
 	{
 		if (this->HasAbsorberOfType(EAbsType::Flesh))
 		{
-			BCharacter->UpdateHealthAmountOnHUD(true, this->getAbsorberAmount(0), this->getAbsorberMaxAmount(0));
+			BCharacter->UpdateHealthAmountOnHUD(true, this->getAbsorberAmount(EAbsType::Flesh), this->getAbsorberMaxAmount(EAbsType::Flesh));
 		}
 	}
 }
 
-uint8 UDamageHandler::getAbsorberMaxAmount_Implementation(uint8 indexOfAbsorber)
->>>>>>> origin/master
+uint8 UDamageHandler::getAbsorberMaxAmount_Implementation(EAbsType abstype)
 {
 	for (UAbsorber* a : absorbers) {
 		if (a->type == abstype)
