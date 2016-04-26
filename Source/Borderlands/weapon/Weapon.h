@@ -88,7 +88,18 @@ public:
 	//Composants de l'acteur
 	//class ACollidingPawn* Owner;
 	class ABCharacter* Owner;
+	
+	//A remplacer par un composant WeaponGraphic
 	USkeletalMeshComponent* WeaponVisual;
+	
+	static unsigned int cpt;
+	TArray< class USkeletalMeshComponent* > meshes;
+	class UAnimSequence* reloadAnim;
+	class UAnimSequence* fireAnim;
+	
+	
+	//####################################
+	
 	class UWeaponTypeComponent *WeaponTypeComponent;
 	class UWeaponState* CurrentState;
 	

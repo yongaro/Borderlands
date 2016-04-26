@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "../weapon/WeaponGraphic.h"
 #include "BCharacter.generated.h"
 
 UCLASS()
@@ -48,8 +49,8 @@ public:
 	FVector GetCameraLocation();
 	FRotator GetCameraRotation();
 	void traceLine(FHitResult& HitResult);
-	void updateAmmunitionAmountOnHUD(uint8 AmmunitionInMagazine, uint8 AmmunitionInReserve);
-	void UpdateHealthAmountOnHUD(bool HasHealthAmount, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount);
+	void updateAmmunitionAmountOnHUD(uint8, uint8);
+	void UpdateHealthAmountOnHUD(bool, uint8, uint8);
 
 	//Inventory
 	class AWeapon* Weapon;

@@ -47,20 +47,24 @@ ABCharacter::ABCharacter()
 	if (FirstPersonMeshAsset.Succeeded())
 	{
 		FirstPersonMesh->SetSkeletalMesh(FirstPersonMeshAsset.Object);
-		FirstPersonMesh->SetRelativeLocation(FVector(30.0f, 0, -150.0f));
+		FirstPersonMesh->SetRelativeLocation(FVector(15.0f, 0, -160.0f));
 	}
 
 	//First person skeletal mesh animation
-	/*const ConstructorHelpers::FObjectFinder<UAnimSequence> IdleAnimationAsset(TEXT("AnimSequence'/Game/Borderlands/characters/claptrap/FP/AnimSet/1st_Person_AssaultRifle/Idle_Anim.Idle_Anim'"));
-	IdleAnimation = IdleAnimationAsset.Object;*/
+	const ConstructorHelpers::FObjectFinder<UAnimSequence> IdleAnimationAsset(TEXT("AnimSequence'/Game/Borderlands/characters/claptrap/FP/AnimSet/1st_Person_Pistol/Idle_Anim.Idle_Anim'"));
+	IdleAnimation = IdleAnimationAsset.Object;
 
 	//Weapon System
 	DefaultWeaponClass = AWeapon::StaticClass();
 	bIsFiringDisabled = false;
 	//Weapon offset and rotation
-	WeaponOffset.Z += 30.0f;
-	WeaponOffset.Y += 20.0f;
-	WeaponRotation.Yaw = -90.0f;
+	//WeaponOffset.Z += 30.0f;
+	//WeaponOffset.Y += 40.0f;
+	//WeaponRotation.Yaw = -90.0f;
+	WeaponOffset.Z += 40.0f;
+	WeaponOffset.Y += 0.0f;
+	WeaponOffset.X += -20.0f;
+	WeaponRotation.Yaw = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -73,7 +77,7 @@ void ABCharacter::BeginPlay()
 	if (FirstPersonMesh != NULL && IdleAnimation != NULL)
 	{
 		//UAnimSequence != UAnimationAsset ???????
-		//FirstPersonMesh->PlayAnimation(IdleAnimation, true);
+		FirstPersonMesh->PlayAnimation(IdleAnimation, true);
 	}
 }
 
@@ -221,7 +225,7 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 		Weapon = World->SpawnActor<AWeapon>(DefaultWeaponClass, NewLocation, NewRotation);
 		if (Weapon == NULL)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Echec création arme"));
+			UE_LOG(LogTemp, Warning, TEXT("Echec creation arme"));
 		}
 		else
 		{
