@@ -148,12 +148,16 @@ void ABCharacter::onStopFire()
 
 FVector ABCharacter::GetCameraLocation()
 {
-	return Weapon->WeaponVisual->GetSocketLocation("Muzzle");
+	FMinimalViewInfo viewInfo;
+	CameraComponent->GetCameraView(0.f, viewInfo);
+	return viewInfo.Location;
 }
 
 FRotator ABCharacter::GetCameraRotation()
 {
-	return Weapon->WeaponVisual->GetSocketRotation("Muzzle");
+	FMinimalViewInfo viewInfo;
+	CameraComponent->GetCameraView(0.f, viewInfo);
+	return viewInfo.Rotation;
 }
 
 void ABCharacter::traceLine(FHitResult & HitResult)
