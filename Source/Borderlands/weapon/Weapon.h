@@ -92,10 +92,9 @@ public:
 	//A remplacer par un composant WeaponGraphic
 	USkeletalMeshComponent* WeaponVisual;
 	
-	static unsigned int cpt;
-	TArray< class USkeletalMeshComponent* > meshes;
-	class UAnimSequence* reloadAnim;
-	class UAnimSequence* fireAnim;
+	class AWeaponGraphic* WVisual;
+	class WeaponGraphicComponent* w_visual;
+	
 	
 	
 	//####################################

@@ -4,8 +4,6 @@
 #include "WeapGraphicComp.h"
 
 
-unsigned int UWeapGraphicComp::cpt = 0;
-
 void  UWeapGraphicComp::defaultWeap(){
 	//Recherche des skeletal mesh pour les differentes parties
 	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunBMeshObj(TEXT("SkeletalMesh'/Game/Borderlands/weapons/body_bandit.body_bandit'"));
@@ -26,18 +24,16 @@ void  UWeapGraphicComp::defaultWeap(){
 	reloadAnim = reloadAss.Object;
 
 	//Creation des composants
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("dummy"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunRoot"))); 
 	
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunBMesh"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunBMesh"))); 
 	meshes.Last()->SetSkeletalMesh(gunBMeshObj.Object); meshes.Last()->SetMaterial(0, gunBMaterial.Object);
 	
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunCMesh"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunCMesh"))); 
 	meshes.Last()->SetSkeletalMesh(gunCMeshObj.Object); meshes.Last()->SetMaterial(0, gunCMaterial.Object);
 	
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunHMesh"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunHMesh"))); 
 	meshes.Last()->SetSkeletalMesh(gunHMeshObj.Object); meshes.Last()->SetMaterial(0, gunHMaterial.Object);
-	
-	++ UWeapGraphicComp::cpt;
 }
 
 

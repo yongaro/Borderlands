@@ -78,6 +78,10 @@ void ABCharacter::BeginPlay()
 	{
 		//UAnimSequence != UAnimationAsset ???????
 		FirstPersonMesh->PlayAnimation(IdleAnimation, true);
+		if(Weapon != NULL){
+			//Weapon->AttachRootComponentToActor(this,TEXT("R_Weapon_Bone"),EAttachLocation::SnapToTargetIncludingScale,true);
+			Weapon->GetRootComponent()->AttachTo(FirstPersonMesh,TEXT("R_Weapon_Bone"), EAttachLocation::SnapToTargetIncludingScale, true);
+		}
 	}
 }
 
@@ -85,16 +89,11 @@ void ABCharacter::BeginPlay()
 void ABCharacter::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (Weapon != NULL)
-	{
-		Weapon->SetActorLocation(GetActorLocation() + WeaponOffset);
-		Weapon->SetActorRotation(GetActorRotation() + WeaponRotation);
-	}
+
 }
 
 // Called to bind functionality to input
-void ABCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
-{
+void ABCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent){
 	Super::SetupPlayerInputComponent(InputComponent);
 
 }

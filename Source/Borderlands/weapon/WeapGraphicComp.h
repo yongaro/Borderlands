@@ -10,8 +10,6 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BORDERLANDS_API UWeapGraphicComp : public UActorComponent
 {
 	GENERATED_BODY()
-
-	static unsigned int cpt;
 	
 	TArray< class USkeletalMeshComponent* > meshes;
 	class UAnimSequence* reloadAnim;

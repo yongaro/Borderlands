@@ -3,7 +3,6 @@
 #include "Borderlands.h"
 #include "WeaponGraphic.h"
 
-unsigned int AWeaponGraphic::cpt = 0;
 
 
 void AWeaponGraphic::defaultWeap(){
@@ -26,32 +25,30 @@ void AWeaponGraphic::defaultWeap(){
 	reloadAnim = reloadAss.Object;
 
 	//Creation des composants
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("dummy"+cpt))); 
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("gunRoot"));
 	
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunBMesh"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunBMesh")));
 	meshes.Last()->SetSkeletalMesh(gunBMeshObj.Object); meshes.Last()->SetMaterial(0, gunBMaterial.Object);
 	
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunCMesh"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunCMesh"))); 
 	meshes.Last()->SetSkeletalMesh(gunCMeshObj.Object); meshes.Last()->SetMaterial(0, gunCMaterial.Object);
 	
-	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunHMesh"+cpt))); 
+	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunHMesh"))); 
 	meshes.Last()->SetSkeletalMesh(gunHMeshObj.Object); meshes.Last()->SetMaterial(0, gunHMaterial.Object);
-	
-	++AWeaponGraphic::cpt;
 }
 
 
 void AWeaponGraphic::bind(){
 	if( meshes.Num() > 2 ){
-		for(size_t i = 1; i != meshes.Num(); ++i){
-			meshes[i]->AttachTo( meshes[0], TEXT("Root"), EAttachLocation::SnapToTargetIncludingScale, true);
+		for(size_t i = 0; i != meshes.Num(); ++i){
+			meshes[i]->AttachTo( RootComponent, TEXT("Root"), EAttachLocation::SnapToTargetIncludingScale, true);
 		}
 	}
 }
 
 void AWeaponGraphic::fire(){
 	if( meshes.Num() > 2 ){
-		for(size_t i = 1; i != meshes.Num(); ++i){
+		for(size_t i = 0; i != meshes.Num(); ++i){
 			meshes[i]->PlayAnimation(fireAnim,false);
 		}
 	}
@@ -59,7 +56,7 @@ void AWeaponGraphic::fire(){
 
 void AWeaponGraphic::reload(){
 	if( meshes.Num() > 2 ){
-		for(size_t i = 1; i != meshes.Num(); ++i){
+		for(size_t i = 0; i != meshes.Num(); ++i){
 			meshes[i]->PlayAnimation(reloadAnim,false);
 		}
 	}
@@ -68,6 +65,8 @@ void AWeaponGraphic::reload(){
 void AWeaponGraphic::attachTo( AActor* actor, FName socket, EAttachLocation::Type location, bool bWeldSimulatedBodies){
 	AttachRootComponentToActor(actor,socket,location,bWeldSimulatedBodies);
 }
+
+USkeletalMeshComponent* AWeaponGraphic::getRoot(){ return meshes[0]; }
 
 
 // Sets default values
@@ -82,15 +81,12 @@ AWeaponGraphic::AWeaponGraphic(){
 }
 
 // Called when the game starts or when spawned
-void AWeaponGraphic::BeginPlay()
-{
+void AWeaponGraphic::BeginPlay(){
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AWeaponGraphic::Tick( float DeltaTime ){
 	Super::Tick( DeltaTime );
-
 }
 

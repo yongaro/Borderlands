@@ -6,11 +6,8 @@
 #include "WeaponGraphic.generated.h"
 
 UCLASS()
-class BORDERLANDS_API AWeaponGraphic : public AActor
-{
+class BORDERLANDS_API AWeaponGraphic : public AActor{
 	GENERATED_BODY()
-	
-	static unsigned int cpt;
 	
 	TArray< class USkeletalMeshComponent* > meshes;
 	class UAnimSequence* reloadAnim;
@@ -22,7 +19,7 @@ public:
 	virtual void fire();
 	virtual void reload();
 	virtual void attachTo( AActor*, FName, EAttachLocation::Type, bool);
-	
+	virtual class USkeletalMeshComponent* getRoot();
 	
 	
 	// Sets default values for this actor's properties
