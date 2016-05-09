@@ -40,6 +40,8 @@ struct FWeaponsParts{
 		if( category.Equals(FString("canon"),ESearchCase::Type::IgnoreCase ) ){ canons.Add(p); }
 		if( category.Equals(FString("handle"),ESearchCase::Type::IgnoreCase ) ){ handles.Add(p); }
 		if( category.Equals(FString("other"),ESearchCase::Type::IgnoreCase ) ){ others.Add(p); }
+		
+		UE_LOG(LogTemp, Warning,TEXT("FWeaponParts::Add -- Unknown category : %s"), *category);
 	}	
 };
 

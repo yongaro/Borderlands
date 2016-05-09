@@ -59,8 +59,8 @@ void ABorderlandsHUD::DrawHUD()
 
 void ABorderlandsHUD::UpdateAmmunitionAmount(uint8 AmmoInMag, uint8 AmmoInR)
 {
-	this->AmmoInMagazine = AmmoInMag;
-	this->AmmoInReserve = AmmoInR;
+	this->AmmoInMagazine = AmmoInMagazine;
+	this->AmmoInReserve = AmmoInReserve;
 }
 
 void ABorderlandsHUD::UpdateHealthAmount(bool HasHealthAbs, uint8 CurrentHealthAm, uint8 MaximumHealthAm)

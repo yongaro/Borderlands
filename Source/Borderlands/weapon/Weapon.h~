@@ -93,6 +93,7 @@ public:
 	USkeletalMeshComponent* WeaponVisual;
 	
 	class AWeaponGraphic* WVisual;
+	class WeaponGraphicComponent* w_visual;
 	
 	
 	

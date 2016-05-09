@@ -18,8 +18,8 @@ AWeapon::AWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//RootComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VisualRepresentation"));
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("VisualRepresentation"));
+	RootComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VisualRepresentation"));
+	
 	//A remplacer par le composant definitif
 	/*
 	//Create visual representation of weapon (skeltal mesh)

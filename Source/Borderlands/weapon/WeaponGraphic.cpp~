@@ -9,11 +9,12 @@ TArray<FWeaponsParts*>* AWeaponGraphic::weaponsParts = NULL;
 
 void AWeaponGraphic::defaultWeap(){
 	AWeaponGraphic::loadXML();
-//	FWeaponsParts* pistols = AWeaponGraphic::getWtype(FString("pistols"));
-//	FPart* gunBodyP = pistols->getRandom(FString("body"));
-//	FPart* gunCanonP = pistols->getRandom(FString("canon"));
-//	FPart* gunHandleP = pistols->getRandom(FString("handle"));
- 
+	FWeaponsParts* pistols = AWeaponGraphic::getWtype(FString("pistols"));
+	FPart* gunBodyP = pistols->getRandom(FString("body"));
+	FPart* gunCanonP = pistols->getRandom(FString("canon"));
+	FPart* gunHandleP = pistols->getRandom(FString("handle"));
+
+	FString 
 	
 	//if(gunBodyP != NULL){ UE_LOG(LogTemp, Warning,TEXT("C PA VIDE POURTAN %s"),  TEXT(gunBodyP->getValue(FString("mesh"))) ); }
 	//if(gunCanonP != NULL){ UE_LOG(LogTemp, Warning,TEXT("C PA VIDE POURTAN")); }
