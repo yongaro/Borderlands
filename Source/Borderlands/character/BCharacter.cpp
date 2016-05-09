@@ -44,9 +44,11 @@ ABCharacter::ABCharacter()
 
 	//First person skeletal mesh asset
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FirstPersonMeshAsset(TEXT("SkeletalMesh'/Game/Borderlands/characters/claptrap/FP/Skel_FragTrap_Arms.Skel_FragTrap_Arms'"));
+	const ConstructorHelpers::FObjectFinder<UMaterial> FPMat(TEXT("Material'/Game/Borderlands/characters/claptrap/FP/FragtrapWheelArm_Dif_Mat.FragtrapWheelArm_Dif_Mat'"));
 	if (FirstPersonMeshAsset.Succeeded())
 	{
 		FirstPersonMesh->SetSkeletalMesh(FirstPersonMeshAsset.Object);
+		FirstPersonMesh->SetMaterial(0, FPMat.Object);
 		FirstPersonMesh->SetRelativeLocation(FVector(15.0f, 0, -160.0f));
 	}
 

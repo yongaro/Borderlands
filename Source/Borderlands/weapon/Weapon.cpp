@@ -65,7 +65,6 @@ void AWeapon::BeginPlay(){
 		WVisual = world->SpawnActor<AWeaponGraphic>(AWeaponGraphic::StaticClass(),loc,rotation,params);
 		
 		if( WVisual != NULL ){
-			//RootComponent = WVisual->GetRootComponent();
 			WVisual->attachTo(this, TEXT("Root"), EAttachLocation::SnapToTargetIncludingScale, true);
 		}
 	}
@@ -80,6 +79,7 @@ void AWeapon::Tick( float DeltaTime ){
 void AWeapon::FiringSequence(float DeltaTime){
 	if (WeaponTypeComponent != NULL && bIsFiring){
 		if (currentAmmunitionInMagazine > 0){
+			if( WVisual != NULL ){ WVisual->fire(); } //Passage a modifier pour le mode de  tir auto
 			WeaponTypeComponent->onFire();
 		}
 		else{
@@ -106,8 +106,8 @@ void AWeapon::FiringSequence(float DeltaTime){
 
 void AWeapon::StartFire()
 {
-	if (Owner != NULL && !Owner->bIsFiringDisabled)
-	{
+	if (Owner != NULL && !Owner->bIsFiringDisabled){
+		
 		bool bClientFired = BeginFiringSequence(false);
 		//Code réseau ici, avec checking de role et envoi de message au serveur
 		/*if (Role < ROLE_Authority)
@@ -134,8 +134,7 @@ void AWeapon::EndFire()
 
 bool AWeapon::BeginFiringSequence(bool bClientFired)
 {
-	if (Owner != NULL)
-	{
+	if (Owner != NULL){
 		//UE_LOG(LogTemp, Warning, TEXT("AWeapon::BeginFiringSequence()"));
 		bool bResult = CurrentState->BeginFiringSequence(bClientFired);
 		return bResult;
@@ -154,10 +153,9 @@ bool AWeapon::EndFiringSequence(bool bClientFired)
 	return false;
 }
 
-void AWeapon::reload()
-{
-	if (currentAmmunitionInMagazine < MagazineSize && currentTotalAmmunition > 0)
-	{
+void AWeapon::reload(){
+	if (currentAmmunitionInMagazine < MagazineSize && currentTotalAmmunition > 0){
+		if( WVisual != NULL ){ WVisual->reload(); }
 		WeaponTypeComponent->onReload();
 	}
 }
