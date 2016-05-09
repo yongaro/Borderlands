@@ -9,34 +9,33 @@ TArray<FWeaponsParts*>* AWeaponGraphic::weaponsParts = NULL;
 
 void AWeaponGraphic::defaultWeap(){
 	AWeaponGraphic::loadXML();
-//	FWeaponsParts* pistols = AWeaponGraphic::getWtype(FString("pistols"));
-//	FPart* gunBodyP = pistols->getRandom(FString("body"));
-//	FPart* gunCanonP = pistols->getRandom(FString("canon"));
-//	FPart* gunHandleP = pistols->getRandom(FString("handle"));
+	FWeaponsParts* pistols = AWeaponGraphic::getWtype(FString("pistols"));
+	FPart* gunBodyP = pistols->getRandom(FString("body"));
+	FPart* gunCanonP = pistols->getRandom(FString("canon"));
+	FPart* gunHandleP = pistols->getRandom(FString("handle"));
+	FPart* gunOtherP = pistols->getRandom(FString("other"));
  
+	parts.Add(gunBodyP);
+	parts.Add(gunCanonP);
+	parts.Add(gunHandleP);
 	
-	//if(gunBodyP != NULL){ UE_LOG(LogTemp, Warning,TEXT("C PA VIDE POURTAN %s"),  TEXT(gunBodyP->getValue(FString("mesh"))) ); }
-	//if(gunCanonP != NULL){ UE_LOG(LogTemp, Warning,TEXT("C PA VIDE POURTAN")); }
-	//if(gunHandleP != NULL){ UE_LOG(LogTemp, Warning,TEXT("C PA VIDE POURTAN")); }
 	//Recherche des skeletal mesh pour les differentes parties
-	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunBMeshObj(TEXT("SkeletalMesh'/Game/Borderlands/weapons/pistols/body_bandit.body_bandit'"));
-	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunCMeshObj(TEXT("SkeletalMesh'/Game/Borderlands/weapons/pistols/canon_jakobs.canon_jakobs'"));
-	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunHMeshObj(TEXT("SkeletalMesh'/Game/Borderlands/weapons/pistols/handle_jakobs.handle_jakobs'"));
-	//const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunBMeshObj( *(gunBodyP->getValue(FString("mesh"))) );
-	//const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunCMeshObj( *(gunCanonP->getValue(FString("mesh"))) );
-	//const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunHMeshObj( *(gunHandleP->getValue(FString("mesh"))) );
+	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunBMeshObj( *(gunBodyP->getValue(FString("mesh"))) );
+	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunCMeshObj( *(gunCanonP->getValue(FString("mesh"))) );
+	const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunHMeshObj( *(gunHandleP->getValue(FString("mesh"))) );
 	
 	//Recherche des materiaux de chaque partie
-	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunBMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_DemoWall_Inst_3.M_DemoWall_Inst_3'"));
-	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunCMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_LightSculpture_Red.M_LightSculpture_Red'"));
-	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunHMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_LightSculpture_Green.M_LightSculpture_Green'"));
+	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunBMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_LightSculpture_Black.M_LightSculpture_Black'"));
+	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunCMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_LightSculpture_Blue.M_LightSculpture_Blue'"));
+	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunHMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_LightSculpture_Orange.M_LightSculpture_Orange'"));
+	const ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> gunOMaterial(TEXT("MaterialInstanceConstant'/Game/DemoRoom/Materials/M_LightSculpture_Red.M_LightSculpture_Red'"));
 	
 	//Animation de tir
-	const ConstructorHelpers::FObjectFinder<UAnimSequence> fireAss(TEXT("AnimSequence'/Game/Borderlands/weapons/pistols/AnimSet/fire__auto.fire__auto'"));
+	const ConstructorHelpers::FObjectFinder<UAnimSequence> fireAss(*(gunBodyP->getValue(FString("fireAnim"))));
 	fireAnim = fireAss.Object;
 	
 	//Animation de recharge
-	const ConstructorHelpers::FObjectFinder<UAnimSequence> reloadAss(TEXT("AnimSequence'/Game/Borderlands/weapons/pistols/AnimSet/fire__auto.fire__auto'"));
+	const ConstructorHelpers::FObjectFinder<UAnimSequence> reloadAss( *(gunBodyP->getValue(FString("reloadAnim"))) );
 	reloadAnim = reloadAss.Object;
 
 	//Creation des composants
@@ -50,6 +49,14 @@ void AWeaponGraphic::defaultWeap(){
 	
 	meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunHMesh"))); 
 	meshes.Last()->SetSkeletalMesh(gunHMeshObj.Object); meshes.Last()->SetMaterial(0, gunHMaterial.Object);
+	
+	if(FMath::RandBool() ){
+		const ConstructorHelpers::FObjectFinder<USkeletalMesh> gunOMeshObj( *(gunOtherP->getValue(FString("mesh"))) );
+		meshes.Add(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("gunOMesh"))); 
+		meshes.Last()->SetSkeletalMesh(gunOMeshObj.Object); meshes.Last()->SetMaterial(0, gunOMaterial.Object);
+		parts.Add(gunOtherP);
+	}
+	
 }
 
 
@@ -93,8 +100,6 @@ void AWeaponGraphic::loadXML(){
 		FWeaponsParts* collection = NULL;
 		FString cat;
 		FPart* cur = NULL;
-		FString fu;
-		FString bar;
 		
 		if ( file->IsValid() ){
 			FXmlNode* root = file->GetRootNode();
@@ -102,20 +107,22 @@ void AWeaponGraphic::loadXML(){
 				TArray<FXmlNode*> weaponTypes = root->GetChildrenNodes();
 				for( FXmlNode* weaponType : weaponTypes ){
 					
+					//UE_LOG(LogTemp, Warning,TEXT("%s"), *(weaponType->GetAttribute(FString("value"))) );
 					collection = AWeaponGraphic::getWtype( weaponType->GetAttribute(FString("value")) );
 					TArray<FXmlNode*> categories = weaponType->GetChildrenNodes();
 					for( FXmlNode* category : categories ){
 						
+						//UE_LOG(LogTemp, Warning,TEXT("	%s"), *(category->GetAttribute(FString("value"))) );
 						cat = category->GetAttribute(FString("value"));
 						TArray<FXmlNode*> parts = category->GetChildrenNodes();
 						for( FXmlNode* part : parts ){
 							
+							//UE_LOG(LogTemp, Warning,TEXT("		%s"), *(part->GetAttribute(FString("manufacturer"))) );
 							cur = new FPart();
 							cur->manufacturer = part->GetAttribute(FString("manufacturer"));
-							TArray<FXmlNode*> descs = part->GetChildrenNodes();
+							TArray<FXmlNode*> descs = part->GetChildrenNodes()[0]->GetChildrenNodes();
 							for( FXmlNode* d : descs ){
-								//fu = d->GetAttribute(FString("name")); bar = d->GetAttribute(FString("value"));
-								//UE_LOG(LogTemp, Warning,TEXT("%s"), *(d->GetAttribute(FString("name")))   );
+								//UE_LOG(LogTemp, Warning,TEXT("%s -- %s"), *(d->GetAttribute(FString("name"))), *(d->GetAttribute(FString("value"))) );
 								cur->desc.Add( d->GetAttribute(FString("name")),d->GetAttribute(FString("value")) );
 							}
 							collection->Add(cur,cat);	
