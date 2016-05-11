@@ -5,6 +5,7 @@
 #include "BorderlandsHUD.h"
 #include "character/BorderlandsPlayerController.h"
 #include "character/BCharacter.h"
+#include "BorderlandsGameConfigurator.h"
 #include "BorderlandsCharacter.h"
 
 ABorderlandsGameMode::ABorderlandsGameMode()
@@ -21,5 +22,16 @@ ABorderlandsGameMode::ABorderlandsGameMode()
 	PlayerControllerClass = ABorderlandsPlayerController::StaticClass();
 	DefaultPawnClass = ABCharacter::StaticClass();
 	//ABorderlandsPlayerController* PlayerController = PlayerControllerClass->GetDefaultObject<ABorderlandsPlayerController>();
-	
+
+	class UBorderlandsGameConfigurator* gameConfigurator = ConstructObject<class UBorderlandsGameConfigurator>(UBorderlandsGameConfigurator::StaticClass());
+	//UBorderlandsGameConfigurator gameConfigurator;
+	UE_LOG(LogTemp, Warning, TEXT("Configurateur cree"));
+	if (gameConfigurator->LoadFeaturesFromFile(""))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Features chargees"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Erreur chargement des features"));
+	}
 }
