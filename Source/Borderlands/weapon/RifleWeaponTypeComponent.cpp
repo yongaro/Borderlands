@@ -29,7 +29,10 @@ void URifleWeaponTypeComponent::onFire()
 			FHitResult HitResult;
 			OuterWeapon->Owner->traceLine(HitResult);
 					//UE_LOG(LogTemp, Warning, TEXT("Hit :  %s"), HitResult.GetActor()->GetName());
-			HitResult.GetActor()->TakeDamage(OuterWeapon->damageAmount, OuterWeapon->damageEvent, OuterWeapon->Owner->GetInstigatorController(), OuterWeapon->Owner);
+			if (HitResult.GetActor() != nullptr)
+			{
+				HitResult.GetActor()->TakeDamage(OuterWeapon->damageAmount, OuterWeapon->damageEvent, OuterWeapon->Owner->GetInstigatorController(), OuterWeapon->Owner);
+			}
 					//Ici, on pourra faire un traitement sur l'Actor touché par le tracage, du genre OuterWeapon->InflictDamageTo(HitResult.GetActor());
 		}
 	}

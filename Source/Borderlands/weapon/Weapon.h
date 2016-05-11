@@ -53,6 +53,9 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	//On supprime l'acteur et sa composante graphique
+	void DestroyWeapon();
+
 	//Caractéristiques de l'arme
 	UPROPERTY(EditAnywhere, Category = Gameplay)
 		uint8 Damage;

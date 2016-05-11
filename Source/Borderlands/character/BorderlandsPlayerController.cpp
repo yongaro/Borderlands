@@ -38,6 +38,7 @@ void ABorderlandsPlayerController::SetupInputComponent()
 	//Weapon Actions
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ABorderlandsPlayerController::CommandFire);
 	InputComponent->BindAction("Fire", IE_Released, this, &ABorderlandsPlayerController::CommandStopFire);
+	InputComponent->BindAction("Reload", IE_Pressed, this, &ABorderlandsPlayerController::CommandBeginReload);
 
 	//Inventory Actions
 	InputComponent->BindAction("ChangeWeapon1", IE_Pressed, this, &ABorderlandsPlayerController::CommandChangeWeapon1);
@@ -176,6 +177,15 @@ void ABorderlandsPlayerController::CommandStopFire()
 	if (ControlledCharacter != NULL)
 	{
 		ControlledCharacter->onStopFire();
+	}
+}
+
+void ABorderlandsPlayerController::CommandBeginReload()
+{
+	auto ControlledCharacter = Cast<ABCharacter>(this->GetPawn());
+	if (ControlledCharacter != NULL)
+	{
+		ControlledCharacter->BeginReload();
 	}
 }
 

@@ -76,6 +76,15 @@ void AWeapon::Tick( float DeltaTime ){
 	FiringSequence(DeltaTime);
 }
 
+void AWeapon::DestroyWeapon()
+{
+	if (WVisual != nullptr)
+	{
+		WVisual->Destroy();
+	}
+	Destroy();
+}
+
 void AWeapon::FiringSequence(float DeltaTime){
 	if (WeaponTypeComponent != NULL && bIsFiring){
 		if (currentAmmunitionInMagazine > 0){

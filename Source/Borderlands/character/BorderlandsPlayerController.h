@@ -41,6 +41,7 @@ public:
 	//Weapon commands
 	void CommandFire();
 	void CommandStopFire();
+	void CommandBeginReload();
 
 	//HUD commands
 	void UpdateAmmunitionAmountOnHUD(uint8 AmmoInMagazine, uint8 AmmoInReserve);

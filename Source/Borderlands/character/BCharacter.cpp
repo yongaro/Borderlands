@@ -148,6 +148,17 @@ void ABCharacter::onStopFire()
 	}
 }
 
+void ABCharacter::BeginReload()
+{
+	//On ne tire pas pendant le rechargement
+	UE_LOG(LogTemp, Warning, TEXT("Begin reload..."));
+	bIsFiringDisabled = true;
+
+	//Recharge ...
+
+	//Faudra penser à le remettre à false à la fin ...
+}
+
 FVector ABCharacter::GetCameraLocation()
 {
 	FMinimalViewInfo viewInfo;
@@ -223,7 +234,8 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 	{
 		if (Weapon != NULL)
 		{
-			Weapon->Destroy();
+			UE_LOG(LogTemp, Warning, TEXT("Destruction arme"));
+			Weapon->DestroyWeapon();
 		}
 		FVector NewLocation = GetActorLocation() + WeaponOffset;
 		FRotator NewRotation = GetActorRotation() + WeaponRotation;
@@ -239,6 +251,7 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 			Weapon->resupply();
 			updateAmmunitionAmountOnHUD(Weapon->currentAmmunitionInMagazine, Weapon->currentTotalAmmunition);
 			//Weapon->AttachRootComponentTo(CameraComponent, NAME_None, EAttachLocation::SnapToTarget);
+			Weapon->GetRootComponent()->AttachTo(FirstPersonMesh, TEXT("R_Weapon_Bone"), EAttachLocation::SnapToTargetIncludingScale, true);
 		}
 	}
 }

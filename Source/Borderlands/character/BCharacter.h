@@ -46,6 +46,8 @@ public:
 	bool bIsFiringDisabled;
 	void onFire();
 	void onStopFire();
+	void BeginReload();
+
 	FVector GetCameraLocation();
 	FRotator GetCameraRotation();
 	void traceLine(FHitResult& HitResult);
