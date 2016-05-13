@@ -18,12 +18,12 @@ public:
 	~UBorderlandsGameConfigurator();
 	
 	//Liste de features
-	bool LoadFeaturesFromFile(FString path);
+	bool LoadFeaturesFromFile();
 	bool HasFeature(FString feature);
 	uint32 GetFeaturesCount();
 	
 	//Configuration
-	void ConfigureGame();
+	void ConfigureGame(UWorld * world);
 
 protected:
 	TArray<FString> features;

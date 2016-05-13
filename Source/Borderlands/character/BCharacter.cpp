@@ -4,6 +4,7 @@
 #include "../weapon/Weapon.h"
 #include "../weapon/WeaponTypeComponent.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
+#include "../DamageHandler.h"
 #include "BorderlandsPlayerController.h"
 #include "BCharacter.h"
 /*
@@ -253,5 +254,24 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 			//Weapon->AttachRootComponentTo(CameraComponent, NAME_None, EAttachLocation::SnapToTarget);
 			Weapon->GetRootComponent()->AttachTo(FirstPersonMesh, TEXT("R_Weapon_Bone"), EAttachLocation::SnapToTargetIncludingScale, true);
 		}
+	}
+}
+
+void ABCharacter::Connect(UActorComponent * comp)
+{
+	//DamageHandler ?
+	auto damageHandler = Cast<UDamageHandler>(comp);
+	if (damageHandler != nullptr)
+	{
+		damageHandler->OuterActor = this;
+		if (!damageHandler->IsRegistered())
+		{
+			damageHandler->RegisterComponent();
+		}
+		if (DamageHandler != nullptr)
+		{
+			DamageHandler->DestroyComponent();
+		}
+		DamageHandler = damageHandler;
 	}
 }

@@ -10,6 +10,13 @@ class ABorderlandsGameMode : public AGameMode
 
 public:
 	ABorderlandsGameMode();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:
+	class UBorderlandsGameConfigurator* gameConfigurator;
+	bool bAreFeaturesLoaded;
 };
 
 

@@ -47,6 +47,7 @@ AWeapon::AWeapon()
 	CurrentState->OuterWeapon = this;
 	//CurrentState->Log();
 	bIsFiring = false;
+	bHasFired = false;
 	damageEvent.DamageTypeClass = UElectricDamageType::StaticClass();
 	damageEvent.dps = 15;
 	damageEvent.effectChance = 0.8f;
@@ -90,10 +91,18 @@ void AWeapon::FiringSequence(float DeltaTime){
 		if (currentAmmunitionInMagazine > 0){
 			if( WVisual != NULL ){ WVisual->fire(); } //Passage a modifier pour le mode de  tir auto
 			WeaponTypeComponent->onFire();
+			bHasFired = true;
 		}
 		else{
 			reload();
 		}
+	}
+
+	//On fini la rafale de tir
+	if (WeaponTypeComponent != NULL && !bIsFiring && bHasFired)
+	{
+		WeaponTypeComponent->onHold();
+		bHasFired = false;
 	}
 }
 
@@ -115,15 +124,15 @@ void AWeapon::FiringSequence(float DeltaTime){
 
 void AWeapon::StartFire()
 {
-	if (Owner != NULL && !Owner->bIsFiringDisabled){
-		
+	if (Owner != NULL && !Owner->bIsFiringDisabled) {
+
 		bool bClientFired = BeginFiringSequence(false);
 		//Code réseau ici, avec checking de role et envoi de message au serveur
 		/*if (Role < ROLE_Authority)
 		{
-			ServerStartFire(bClientFired); 
+			ServerStartFire(bClientFired);
 		}*/
-		//https://wiki.unrealengine.com/Create_A_Custom_Weapon_-_How_Firing_Works #pasdeblueprint
+		//https://wiki.unrealengine.com/Create_A_Custom_Weapon_-_How_Firing_Works
 	}
 }
 
@@ -137,7 +146,7 @@ void AWeapon::EndFire()
 		{
 		ServerStartFire(bClientFired);
 		}*/
-		//https://wiki.unrealengine.com/Create_A_Custom_Weapon_-_How_Firing_Works #pasdeblueprint
+		//https://wiki.unrealengine.com/Create_A_Custom_Weapon_-_How_Firing_Works
 	}
 }
 
@@ -183,14 +192,10 @@ void AWeapon::FromInventoryItem(FWeaponInventoryItem WeaponInventoryItem)
 	Manufacturer = WeaponInventoryItem.Manufacturer;
 	damageAmount = WeaponInventoryItem.DamageAmount;
 	damageEvent = WeaponInventoryItem.DamageEvent;
+
+	//On connecte le WeaponTypeComponent
 	UWeaponTypeComponent *NewWeaponTypeComponent = NewObject<UWeaponTypeComponent>(this, WeaponInventoryItem.WeaponTypeComponentClass);
-	if (NewWeaponTypeComponent != NULL)
-	{
-		NewWeaponTypeComponent->OuterWeapon = this;
-		NewWeaponTypeComponent->RegisterComponent();
-		WeaponTypeComponent->DestroyComponent();
-		WeaponTypeComponent = NewWeaponTypeComponent;
-	}
+	Connect(NewWeaponTypeComponent);
 }
 
 FWeaponInventoryItem AWeapon::ToInventoryItem()
@@ -205,4 +210,22 @@ FWeaponInventoryItem AWeapon::ToInventoryItem()
 	Result.DamageEvent = this->damageEvent;
 	Result.WeaponTypeComponentClass = this->WeaponTypeComponent->GetClass();
 	return Result;
+}
+
+void AWeapon::Connect(UActorComponent * comp)
+{
+	auto weaponTypeComponent = Cast<UWeaponTypeComponent>(comp);
+	if (weaponTypeComponent != nullptr)
+	{
+		weaponTypeComponent->OuterWeapon = this;
+		if (!weaponTypeComponent->IsRegistered())
+		{
+			weaponTypeComponent->RegisterComponent();
+		}
+		if (WeaponTypeComponent != nullptr)
+		{
+			WeaponTypeComponent->DestroyComponent();
+		}
+		WeaponTypeComponent = weaponTypeComponent;
+	}
 }

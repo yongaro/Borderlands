@@ -4,6 +4,7 @@
 #include "BCharacter.h"
 #include "../weapon/Weapon.h"
 #include "../ElectricDamageType.h"
+#include "../MyDamageType.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
 #include "../BorderlandsHUD.h"
 #include "BorderlandsPlayerController.h"
@@ -12,7 +13,10 @@ ABorderlandsPlayerController::ABorderlandsPlayerController()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	InputComponent = CreateDefaultSubobject<UInputComponent>(TEXT("InputComponent"));
-	SetupInventory();
+	if (Weapons.Num() == 0)
+	{
+		SetupDefaultInventory();
+	}
 }
 
 ABorderlandsPlayerController::~ABorderlandsPlayerController()
@@ -108,16 +112,16 @@ void ABorderlandsPlayerController::CommandLookUp(float value)
 }
 
 /*
-	Ici, on pourra "configurer" les armes de départ du joueur (depuis un eventuel fichier XML ?)
+	Ici, on pourra "configurer" les armes par défaut du joueur (depuis un eventuel fichier XML ?)
 */
-void ABorderlandsPlayerController::SetupInventory()
+void ABorderlandsPlayerController::SetupDefaultInventory()
 {
 	//Pour l'instant, les armes sont en dures
 	FWeaponInventoryItem Weapon1;
 	Weapon1.AmmunitionPool = 60;
 	Weapon1.Damage = 10;
 	Weapon1.DamageAmount = 80;
-	Weapon1.DamageEvent.DamageTypeClass = UElectricDamageType::StaticClass();
+	Weapon1.DamageEvent.DamageTypeClass = UMyDamageType::StaticClass();
 	Weapon1.MagazineSize = 30;
 	Weapon1.Manufacturer = EManufacturer::Jakobs;
 	Weapon1.RateOfFire = 0.1f;

@@ -74,6 +74,7 @@ public:
 	uint8 currentAmmunitionInMagazine;
 	uint8 currentTotalAmmunition;
 	bool bIsFiring;
+	bool bHasFired;
 
 	//Mécaniques de tir
 	void StartFire();
@@ -87,6 +88,7 @@ public:
 	void resupply();
 	void FromInventoryItem(FWeaponInventoryItem);
 	FWeaponInventoryItem ToInventoryItem();
+	void Connect(UActorComponent* comp);
 
 	//Composants de l'acteur
 	//class ACollidingPawn* Owner;

@@ -23,15 +23,26 @@ ABorderlandsGameMode::ABorderlandsGameMode()
 	DefaultPawnClass = ABCharacter::StaticClass();
 	//ABorderlandsPlayerController* PlayerController = PlayerControllerClass->GetDefaultObject<ABorderlandsPlayerController>();
 
-	class UBorderlandsGameConfigurator* gameConfigurator = ConstructObject<class UBorderlandsGameConfigurator>(UBorderlandsGameConfigurator::StaticClass());
-	//UBorderlandsGameConfigurator gameConfigurator;
+	gameConfigurator = ConstructObject<class UBorderlandsGameConfigurator>(UBorderlandsGameConfigurator::StaticClass());
+
+	bAreFeaturesLoaded = false;
+
 	UE_LOG(LogTemp, Warning, TEXT("Configurateur cree"));
-	if (gameConfigurator->LoadFeaturesFromFile(""))
+	if (gameConfigurator->LoadFeaturesFromFile())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Features chargees"));
+		bAreFeaturesLoaded = true;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Erreur chargement des features"));
+	}
+}
+
+void ABorderlandsGameMode::BeginPlay()
+{
+	if (bAreFeaturesLoaded)
+	{
+		gameConfigurator->ConfigureGame(GetWorld());
 	}
 }

@@ -30,7 +30,7 @@ public:
 
 	//Inventory data
 	TArray<struct FWeaponInventoryItem> Weapons;
-	void SetupInventory();
+	void SetupDefaultInventory();
 
 	//Inventory commands
 	void CommandChangeWeapon1();

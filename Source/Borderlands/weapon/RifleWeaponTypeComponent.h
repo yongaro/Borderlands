@@ -21,4 +21,5 @@ public:
 	//Weapon behaviors
 	virtual void onFire();
 	virtual void onReload();
+	virtual void onHold();
 };

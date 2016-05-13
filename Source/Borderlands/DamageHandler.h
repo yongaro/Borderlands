@@ -28,6 +28,11 @@ public:
 	
 	virtual void addAbsorber(UAbsorber* abs);
 
+	//Owner du composant
+	UPROPERTY(EditAnywhere, Category = "Owner")
+		class AActor* OuterActor;
+
+	//Proprietes du HUD
 	virtual void updateHUD();
 
 	// Hérité via ICharacterStatusInterface

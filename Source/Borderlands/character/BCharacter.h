@@ -57,4 +57,10 @@ public:
 	//Inventory
 	class AWeapon* Weapon;
 	void SpawnWeapon(struct FWeaponInventoryItem);
+
+	//Damage Handler
+	class UDamageHandler* DamageHandler;
+
+	//Components
+	void Connect(UActorComponent* comp);
 };

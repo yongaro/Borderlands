@@ -55,3 +55,8 @@ void UWeaponTypeComponent::onReload()
 
 }
 
+void UWeaponTypeComponent::onHold()
+{
+
+}
+

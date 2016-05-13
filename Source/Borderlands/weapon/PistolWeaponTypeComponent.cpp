@@ -3,30 +3,32 @@
 #include "Borderlands.h"
 #include "Weapon.h"
 #include "../character/BCharacter.h"
-#include "RifleWeaponTypeComponent.h"
+#include "PistolWeaponTypeComponent.h"
 
-URifleWeaponTypeComponent::URifleWeaponTypeComponent()
+UPistolWeaponTypeComponent::UPistolWeaponTypeComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	bHasFired = false;
 }
 
-URifleWeaponTypeComponent::~URifleWeaponTypeComponent()
+UPistolWeaponTypeComponent::~UPistolWeaponTypeComponent()
 {
 }
 
-void URifleWeaponTypeComponent::onFire()
+void UPistolWeaponTypeComponent::onFire()
 {
 	Super::onFire();
-	if (OuterWeapon != NULL) 
+	if (OuterWeapon != NULL)
 	{
-		if (LastFiringTime >= OuterWeapon->RateOfFire)
+		if (LastFiringTime >= OuterWeapon->RateOfFire && !bHasFired)
 		{
+			bHasFired = true;
 			LastFiringTime = 0;
 			UE_LOG(LogTemp, Warning, TEXT("PAN"));
 
 			FHitResult HitResult;
 			OuterWeapon->Owner->traceLine(HitResult);
-					//UE_LOG(LogTemp, Warning, TEXT("Hit :  %s"), HitResult.GetActor()->GetName());
+			//UE_LOG(LogTemp, Warning, TEXT("Hit :  %s"), HitResult.GetActor()->GetName());
 			if (HitResult.GetActor() != nullptr)
 			{
 				HitResult.GetActor()->TakeDamage(OuterWeapon->damageAmount, OuterWeapon->damageEvent, OuterWeapon->Owner->GetInstigatorController(), OuterWeapon->Owner);
@@ -35,13 +37,15 @@ void URifleWeaponTypeComponent::onFire()
 	}
 }
 
-void URifleWeaponTypeComponent::onReload()
+void UPistolWeaponTypeComponent::onReload()
 {
 
 }
 
-void URifleWeaponTypeComponent::onHold()
+void UPistolWeaponTypeComponent::onHold()
 {
-
+	bHasFired = false;
 }
+
+
 

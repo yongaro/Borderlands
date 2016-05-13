@@ -35,7 +35,8 @@ void UDamageHandler::BeginPlay()
 void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	FString s=GetOwner()->GetName();
+	//FString s=GetOwner()->GetName();
+	FString s = OuterActor->GetName();
 	for (UAbsorber* abs : absorbers) {
 		s += " - " + abs->GetName()+ " : ";
 		s.AppendInt(abs->amount);
@@ -62,7 +63,8 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UDamageHandler::InitializeComponent()
 {
-	ADamageActor *dmg = Cast<ADamageActor>(GetOwner());
+	//ADamageActor *dmg = Cast<ADamageActor>(GetOwner());
+	ADamageActor *dmg = Cast<ADamageActor>(OuterActor);
 	if (dmg) {
 		dmg->dmgHandler = this; 
 	}
@@ -81,12 +83,13 @@ void UDamageHandler::addAbsorber(UAbsorber * abs)
 
 void UDamageHandler::updateHUD()
 {
-	ABCharacter* BCharacter = Cast<ABCharacter>(GetOwner());
+	//ABCharacter* BCharacter = Cast<ABCharacter>(GetOwner());
+	ABCharacter* BCharacter = Cast<ABCharacter>(OuterActor);
 	if (BCharacter)
 	{
-		if (this->HasAbsorberOfType(EAbsType::Flesh))
+		if (this->Execute_HasAbsorberOfType(this, EAbsType::Flesh))
 		{
-			BCharacter->UpdateHealthAmountOnHUD(true, this->getAbsorberAmount(EAbsType::Flesh), this->getAbsorberMaxAmount(EAbsType::Flesh));
+			BCharacter->UpdateHealthAmountOnHUD(true, this->Execute_getAbsorberAmount(this, EAbsType::Flesh), this->Execute_getAbsorberMaxAmount(this, EAbsType::Flesh));
 		}
 	}
 }
