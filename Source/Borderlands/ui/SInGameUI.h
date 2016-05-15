@@ -24,8 +24,12 @@ public:
 
 	//Predicates for absorber bars
 	EVisibility HasHealthAbsorber() const;
+	EVisibility HasShieldAbsorber() const;
+	EVisibility HasArmorAbsorber() const;
 
 	//Delegates methods for updates
 	FText GetAmmunitionText() const;
 	TOptional< float > GetHealthPercentage() const;
+	TOptional< float > GetShieldPercentage() const;
+	TOptional< float > GetArmorPercentage() const;
 };

@@ -14,9 +14,9 @@ UDamageHandler::UDamageHandler()
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 	bWantsInitializeComponent = true;
-	UAbsorber* temp=CreateDefaultSubobject<UAbsorber>("Life");
+	/*UAbsorber* temp=CreateDefaultSubobject<UAbsorber>("Life");
 	temp->type = EAbsType::Flesh;
-	absorbers.Add(temp);
+	absorbers.Add(temp);*/
 	dotTimer = 0;
 	
 }
@@ -90,6 +90,14 @@ void UDamageHandler::updateHUD()
 		if (this->Execute_HasAbsorberOfType(this, EAbsType::Flesh))
 		{
 			BCharacter->UpdateHealthAmountOnHUD(true, this->Execute_getAbsorberAmount(this, EAbsType::Flesh), this->Execute_getAbsorberMaxAmount(this, EAbsType::Flesh));
+		}
+		if (this->Execute_HasAbsorberOfType(this, EAbsType::Shield))
+		{
+			BCharacter->UpdateShieldAmountOnHUD(true, this->Execute_getAbsorberAmount(this, EAbsType::Shield), this->Execute_getAbsorberMaxAmount(this, EAbsType::Shield));
+		}
+		if (this->Execute_HasAbsorberOfType(this, EAbsType::Armor))
+		{
+			BCharacter->UpdateArmorAmountOnHUD(true, this->Execute_getAbsorberAmount(this, EAbsType::Armor), this->Execute_getAbsorberMaxAmount(this, EAbsType::Armor));
 		}
 	}
 }

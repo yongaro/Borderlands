@@ -226,6 +226,32 @@ void ABCharacter::UpdateHealthAmountOnHUD(bool HasHealthAmount, uint8 CurrentHea
 	}
 }
 
+void ABCharacter::UpdateShieldAmountOnHUD(bool HasShieldAmount, uint8 CurrentShieldAmount, uint8 MaximumShieldAmount)
+{
+	ABorderlandsPlayerController* PlayerController = Cast<ABorderlandsPlayerController>(GetController());
+	if (PlayerController != NULL)
+	{
+		PlayerController->UpdateShieldAmountOnHUD(HasShieldAmount, CurrentShieldAmount, MaximumShieldAmount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsPlayerController instance"));
+	}
+}
+
+void ABCharacter::UpdateArmorAmountOnHUD(bool HasArmorAmount, uint8 CurrentArmorAmount, uint8 MaximumArmorAmount)
+{
+	ABorderlandsPlayerController* PlayerController = Cast<ABorderlandsPlayerController>(GetController());
+	if (PlayerController != NULL)
+	{
+		PlayerController->UpdateArmorAmountOnHUD(HasArmorAmount, CurrentArmorAmount, MaximumArmorAmount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsPlayerController instance"));
+	}
+}
+
 void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 {
 	UWorld* World = GetWorld();

@@ -18,9 +18,17 @@ ABorderlandsHUD::ABorderlandsHUD(const FObjectInitializer& ObjectInitializer)
 	AmmoInMagazine = 0;
 	AmmoInReserve = 0;
 
-	HasHealthAbsorber = true;
+	HasHealthAbsorber = false;
 	CurrentHealthAmount = 5;
 	MaximumHealthAmount = 5;
+
+	HasShieldAbsorber = false;
+	CurrentShieldAmount = 5;
+	MaximumShieldAmount = 5;
+
+	HasArmorAbsorber = false;
+	CurrentArmorAmount = 5;
+	MaximumArmorAmount = 5;
 }
 
 
@@ -68,5 +76,19 @@ void ABorderlandsHUD::UpdateHealthAmount(bool HasHealthAbs, uint8 CurrentHealthA
 	this->HasHealthAbsorber = HasHealthAbs;
 	this->CurrentHealthAmount = CurrentHealthAm;
 	this->MaximumHealthAmount = MaximumHealthAm;
+}
+
+void ABorderlandsHUD::UpdateShieldAmount(bool HasShieldAbs, uint8 CurrentShieldAm, uint8 MaximumShieldAm)
+{
+	this->HasShieldAbsorber = HasShieldAbs;
+	this->CurrentShieldAmount = CurrentShieldAm;
+	this->MaximumShieldAmount = MaximumShieldAm;
+}
+
+void ABorderlandsHUD::UpdateArmorAmount(bool HasArmorAbs, uint8 CurrentArmorAm, uint8 MaximumArmorAm)
+{
+	this->HasArmorAbsorber = HasArmorAbs;
+	this->CurrentArmorAmount = CurrentArmorAm;
+	this->MaximumArmorAmount = MaximumArmorAm;
 }
 

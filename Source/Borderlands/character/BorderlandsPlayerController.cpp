@@ -218,3 +218,29 @@ void ABorderlandsPlayerController::UpdateHealthAmountOnHUD(bool HasHealthAmount,
 		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsHUD instance"));
 	}
 }
+
+void ABorderlandsPlayerController::UpdateShieldAmountOnHUD(bool HasShieldAmount, uint8 CurrentShieldAmount, uint8 MaximumShieldAmount)
+{
+	ABorderlandsHUD* BorderlandsHUD = Cast<ABorderlandsHUD>(GetHUD());
+	if (BorderlandsHUD != NULL)
+	{
+		BorderlandsHUD->UpdateShieldAmount(HasShieldAmount, CurrentShieldAmount, MaximumShieldAmount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsHUD instance"));
+	}
+}
+
+void ABorderlandsPlayerController::UpdateArmorAmountOnHUD(bool HasArmorAmount, uint8 CurrentArmorAmount, uint8 MaximumArmorAmount)
+{
+	ABorderlandsHUD* BorderlandsHUD = Cast<ABorderlandsHUD>(GetHUD());
+	if (BorderlandsHUD != NULL)
+	{
+		BorderlandsHUD->UpdateArmorAmount(HasArmorAmount, CurrentArmorAmount, MaximumArmorAmount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find BorderlandsHUD instance"));
+	}
+}

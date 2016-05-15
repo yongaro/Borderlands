@@ -53,6 +53,8 @@ public:
 	void traceLine(FHitResult& HitResult);
 	void updateAmmunitionAmountOnHUD(uint8, uint8);
 	void UpdateHealthAmountOnHUD(bool, uint8, uint8);
+	void UpdateShieldAmountOnHUD(bool, uint8, uint8);
+	void UpdateArmorAmountOnHUD(bool, uint8, uint8);
 
 	//Inventory
 	class AWeapon* Weapon;

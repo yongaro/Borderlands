@@ -20,6 +20,8 @@ class BORDERLANDS_API ABorderlandsHUD : public AHUD
 	//Update methods
 	void UpdateAmmunitionAmount(uint8, uint8 );
 	void UpdateHealthAmount(bool, uint8, uint8);
+	void UpdateShieldAmount(bool, uint8, uint8);
+	void UpdateArmorAmount(bool, uint8, uint8);
 
 	//HUD information to display
 	//Ammunition

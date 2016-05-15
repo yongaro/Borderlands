@@ -46,4 +46,6 @@ public:
 	//HUD commands
 	void UpdateAmmunitionAmountOnHUD(uint8 AmmoInMagazine, uint8 AmmoInReserve);
 	void UpdateHealthAmountOnHUD(bool HasHealthAmount, uint8 CurrentHealthAmount, uint8 MaximumHealthAmount);
+	void UpdateShieldAmountOnHUD(bool HasShieldAmount, uint8 CurrentShieldAmount, uint8 MaximumShieldAmount);
+	void UpdateArmorAmountOnHUD(bool HasArmorAmount, uint8 CurrentArmorAmount, uint8 MaximumArmorAmount);
 };
