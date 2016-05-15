@@ -7,12 +7,19 @@
 #include "weapon/PistolWeaponTypeComponent.h"
 #include "MyDamageType.h"
 #include "ElectricDamageType.h"
+#include "HealthAbsorber.h"
+#include "ShieldAbsorber.h"
+#include "ArmorAbsorber.h"
 #include "DamageHandler.h"
 #include "BorderlandsGameConfigurator.h"
 
 UBorderlandsGameConfigurator::UBorderlandsGameConfigurator()
 {
-	//Default values ...
+	classAssociation.Add(TEXT("Health"), UHealthAbsorber::StaticClass());
+	classAssociation.Add(TEXT("Shield"), UShieldAbsorber::StaticClass());
+	classAssociation.Add(TEXT("Armor"), UArmorAbsorber::StaticClass());
+	classAssociation.Add(TEXT("Auto"), URifleWeaponTypeComponent::StaticClass());
+	classAssociation.Add(TEXT("Semi-Auto"), UPistolWeaponTypeComponent::StaticClass());
 }
 
 UBorderlandsGameConfigurator::~UBorderlandsGameConfigurator()
@@ -53,6 +60,11 @@ uint32 UBorderlandsGameConfigurator::GetFeaturesCount()
 	return features.Num();
 }
 
+TSubclassOf<UActorComponent> UBorderlandsGameConfigurator::GetComponentFromFeature(FString feature)
+{
+	return classAssociation[feature];
+}
+
 void UBorderlandsGameConfigurator::ConfigureGame(UWorld* world)
 {
 	if (world != nullptr)
@@ -68,26 +80,17 @@ void UBorderlandsGameConfigurator::ConfigureGame(UWorld* world)
 				UDamageHandler* damageHandler = NewObject<UDamageHandler>(playerCharacter, UDamageHandler::StaticClass());
 				if (HasFeature("Health"))
 				{
-					UAbsorber* healthAbsorber = NewObject<UAbsorber>(damageHandler, UAbsorber::StaticClass());
-					healthAbsorber->type = EAbsType::Flesh;
-					healthAbsorber->amount = 100.f;
-					healthAbsorber->maxAmount = 100.f;
+					UHealthAbsorber* healthAbsorber = NewObject<UHealthAbsorber>(damageHandler, GetComponentFromFeature(TEXT("Health")));
 					damageHandler->addAbsorber(healthAbsorber);
 				}
 				if (HasFeature("Shield"))
 				{
-					UAbsorber* shieldAbsorber = NewObject<UAbsorber>(damageHandler, UAbsorber::StaticClass());
-					shieldAbsorber->type = EAbsType::Shield;
-					shieldAbsorber->amount = 100.f;
-					shieldAbsorber->maxAmount = 100.f;
+					UShieldAbsorber* shieldAbsorber = NewObject<UShieldAbsorber>(damageHandler, GetComponentFromFeature(TEXT("Shield")));
 					damageHandler->addAbsorber(shieldAbsorber);
 				}
 				if (HasFeature("Armor"))
 				{
-					UAbsorber* armorAbsorber = NewObject<UAbsorber>(damageHandler, UAbsorber::StaticClass());
-					armorAbsorber->type = EAbsType::Armor;
-					armorAbsorber->amount = 100.f;
-					armorAbsorber->maxAmount = 100.f;
+					UArmorAbsorber* armorAbsorber = NewObject<UArmorAbsorber>(damageHandler, GetComponentFromFeature(TEXT("Armor")));
 					damageHandler->addAbsorber(armorAbsorber);
 				}
 				playerCharacter->Connect(damageHandler);
@@ -113,11 +116,11 @@ void UBorderlandsGameConfigurator::ConfigureGame(UWorld* world)
 				}
 				if (HasFeature("Auto"))
 				{
-					weapon1.WeaponTypeComponentClass = URifleWeaponTypeComponent::StaticClass();
+					weapon1.WeaponTypeComponentClass = GetComponentFromFeature(TEXT("Auto"));
 				}
 				else if (HasFeature("Semi-Auto"))
 				{
-					weapon1.WeaponTypeComponentClass = UPistolWeaponTypeComponent::StaticClass();
+					weapon1.WeaponTypeComponentClass = GetComponentFromFeature(TEXT("Semi-Auto"));
 				}
 				else
 				{
@@ -136,11 +139,11 @@ void UBorderlandsGameConfigurator::ConfigureGame(UWorld* world)
 				weapon2.DamageEvent.DamageTypeClass = UMyDamageType::StaticClass();
 				if (HasFeature("Semi-Auto"))
 				{
-					weapon2.WeaponTypeComponentClass = UPistolWeaponTypeComponent::StaticClass();
+					weapon2.WeaponTypeComponentClass = GetComponentFromFeature(TEXT("Semi-Auto"));
 				}
 				else if (HasFeature("Auto"))
 				{
-					weapon2.WeaponTypeComponentClass = URifleWeaponTypeComponent::StaticClass();
+					weapon2.WeaponTypeComponentClass = GetComponentFromFeature(TEXT("Auto"));
 				}
 				else
 				{

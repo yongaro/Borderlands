@@ -34,7 +34,7 @@ public:
 	EManufacturer Manufacturer;
 	uint8 DamageAmount;
 	FMyDamageEvent DamageEvent;
-	TSubclassOf<class UWeaponTypeComponent> WeaponTypeComponentClass;
+	TSubclassOf<class UActorComponent> WeaponTypeComponentClass;
 	//A ajouter : Modele de l'arme
 };
 

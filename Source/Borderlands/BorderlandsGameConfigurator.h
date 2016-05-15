@@ -21,10 +21,12 @@ public:
 	bool LoadFeaturesFromFile();
 	bool HasFeature(FString feature);
 	uint32 GetFeaturesCount();
+	TSubclassOf<UActorComponent> GetComponentFromFeature(FString feature);
 	
 	//Configuration
 	void ConfigureGame(UWorld * world);
 
 protected:
 	TArray<FString> features;
+	TMap<FString, TSubclassOf<UActorComponent> > classAssociation;
 };
