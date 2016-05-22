@@ -34,7 +34,7 @@ AWeapon::AWeapon()
 	}
 	*/
 	
-	
+	currentTotalAmmunition = 180;
 	
 	
 	

@@ -156,10 +156,7 @@ void ABCharacter::BeginReload()
 	bIsFiringDisabled = true;
 
 	//Recharge ...
-	if (Weapon != NULL){ 
-		Weapon->reload(); 
-		FirstPersonMesh->PlayAnimation(Weapon->WVisual->FPreloadAnim, false);
-	}	
+	if (Weapon != NULL){ Weapon->reload(); }
 	//Faudra penser à le remettre à false à la fin ...
 	bIsFiringDisabled = false;
 }

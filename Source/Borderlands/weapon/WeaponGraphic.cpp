@@ -38,6 +38,10 @@ void AWeaponGraphic::defaultWeap(){
 	const ConstructorHelpers::FObjectFinder<UAnimSequence> reloadAss( *(gunBodyP->getValue(FString("reloadAnim"))) );
 	reloadAnim = reloadAss.Object;
 
+	//Animation de recharge du personnage
+	const ConstructorHelpers::FObjectFinder<UAnimSequence> FPreloadAss( *(gunBodyP->getValue(FString("FPreloadAnim"))) );
+	FPreloadAnim = FPreloadAss.Object;	
+	
 	//Creation des composants
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("gunRoot"));
 	

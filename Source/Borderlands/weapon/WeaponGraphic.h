@@ -49,14 +49,16 @@ UCLASS()
 class BORDERLANDS_API AWeaponGraphic : public AActor{
 	GENERATED_BODY()
 
+public:	
 	static TArray<FWeaponsParts*>* weaponsParts;
 	
 	TArray< class USkeletalMeshComponent* > meshes;
 	TArray< FPart* > parts;
+	class UAnimSequence* FPreloadAnim;
 	class UAnimSequence* reloadAnim;
 	class UAnimSequence* fireAnim;
 	
-public:	
+
 	virtual void defaultWeap();
 	virtual void bind();
 	virtual void fire();
