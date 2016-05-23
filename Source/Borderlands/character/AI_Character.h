@@ -12,7 +12,8 @@ UENUM()
 enum EB_AIState{
 	idle,
 	hit,
-	walk
+	walk,
+	dead
 };
 
 
@@ -29,7 +30,6 @@ protected:
 	class UAnimSequence* idle;
 	class UAnimSequence* walk;
 	class UAnimSequence* death;
-	bool isDying;
 
 	class UAnimSequence* currentAnim;
 

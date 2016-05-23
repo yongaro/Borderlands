@@ -48,7 +48,6 @@ AAI_Character::AAI_Character(){
 	senses->OnSeePawn.AddDynamic( this, &AAI_Character::onSeePlayer );
 	GetCharacterMovement()->MaxWalkSpeed = 250.0; //Vitesse normale -> 400
 
-	isDying = false;
 
 	DamageHandler = CreateDefaultSubobject<UDamageHandler>(TEXT("DamageHandler"));
 	UHealthAbsorber* healthAbsorber = NewObject<UHealthAbsorber>(DamageHandler, UHealthAbsorber::StaticClass());
@@ -75,12 +74,21 @@ void AAI_Character::Tick( float DeltaTime ){
 	Super::Tick( DeltaTime );
 
 	//Check if the character is dead or not
-	if (IsDead())
-	{
+	if (IsDead()){
 		BeginDeath();
 	}
 
 	//swapIdleWalk();
+	if( state == EB_AIState::dead && currentAnim != death ){
+		currentAnim = death;
+		MeshComp->PlayAnimation(currentAnim,false);
+		UWorld* World = GetWorld();
+		if (World != NULL){
+			float animLen = MeshComp->GetSingleNodeInstance()->GetLength();
+			FTimerHandle timerHandler;
+			GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::EndDeath, animLen, false);
+		}
+	} 
 	if( state == EB_AIState::hit && currentAnim != hit ){ currentAnim = hit; MeshComp->PlayAnimation(currentAnim,false); } 
 	if( state == EB_AIState::walk  && currentAnim != walk ){ currentAnim = walk; MeshComp->PlayAnimation(currentAnim,true); }
 	if( state == EB_AIState::idle && currentAnim != idle ){ currentAnim = idle; MeshComp->PlayAnimation(currentAnim,true); } 
@@ -115,31 +123,15 @@ float AAI_Character::TakeDamage(float DamageAmount, FDamageEvent const & DamageE
 }
 
 
-bool AAI_Character::IsDead()
-{
+bool AAI_Character::IsDead(){
 	return (DamageHandler->Execute_getAbsorberAmount(DamageHandler, EAbsType::Flesh) <= 0.f);
 }
 
-void AAI_Character::BeginDeath()
-{
-	if (!isDying)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Dead"));
-		isDying = true;
-
-		UWorld* World = GetWorld();
-		if (World != NULL)
-		{
-			currentAnim = death;
-			MeshComp->PlayAnimation(currentAnim, true);
-			float animLen = MeshComp->GetSingleNodeInstance()->GetLength();
-			FTimerHandle timerHandler;
-			GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::EndDeath, animLen, false);
-		}
-	}
+void AAI_Character::BeginDeath(){
+	UE_LOG(LogTemp, Warning, TEXT("Dead"));
+	state = EB_AIState::dead;
 }
 
-void AAI_Character::EndDeath()
-{
+void AAI_Character::EndDeath(){
 	Destroy();
 }

@@ -93,9 +93,9 @@ void AWeapon::FiringSequence(float DeltaTime){
 			WeaponTypeComponent->onFire();
 			bHasFired = true;
 		}
-		else{
-			reload();
-		}
+		//else{
+		//	reload();
+		//}
 	}
 
 	//On fini la rafale de tir
