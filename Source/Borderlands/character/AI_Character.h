@@ -23,11 +23,14 @@ protected:
 	class UPawnSensingComponent* senses;
 	class AAI_BController* controller;
 	class USkeletalMeshComponent* MeshComp;
+	class UDamageHandler* DamageHandler;
 	
 	class UAnimSequence* hit;
 	class UAnimSequence* idle;
 	class UAnimSequence* walk;
-	
+	class UAnimSequence* death;
+	bool isDying;
+
 	class UAnimSequence* currentAnim;
 
 public:
@@ -47,6 +50,13 @@ public:
 	
 	UFUNCTION( BlueprintCallable, Category = EnemyFunctions) 
 	virtual void onSeePlayer( class APawn* seen );
+
+	virtual float TakeDamage
+		(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
+
+	bool IsDead();
+	void BeginDeath();
+	void EndDeath();
 };
 
 

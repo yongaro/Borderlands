@@ -29,6 +29,7 @@ void URifleWeaponTypeComponent::onFire()
 					//UE_LOG(LogTemp, Warning, TEXT("Hit :  %s"), HitResult.GetActor()->GetName());
 			if (HitResult.GetActor() != nullptr)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Hit :  %s"), *HitResult.GetActor()->GetName());
 				HitResult.GetActor()->TakeDamage(OuterWeapon->damageAmount, OuterWeapon->damageEvent, OuterWeapon->Owner->GetInstigatorController(), OuterWeapon->Owner);
 			}
 		}

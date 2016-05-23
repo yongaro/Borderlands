@@ -36,7 +36,7 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	//FString s=GetOwner()->GetName();
-	FString s = OuterActor->GetName();
+	/*FString s = OuterActor->GetName();
 	for (UAbsorber* abs : absorbers) {
 		s += " - " + abs->GetName()+ " : ";
 		s.AppendInt(abs->amount);
@@ -45,7 +45,7 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		1,
 		5.f,
 		FColor::Red,
-		FString::Printf(TEXT("%s"), *s));
+		FString::Printf(TEXT("%s"), *s));*/
 	// ...
 
 	if (dotCount > 0 && dotTimer > 60) {
@@ -138,6 +138,7 @@ bool UDamageHandler::HasAbsorberOfType_Implementation(EAbsType abstype)
 
 bool UDamageHandler::Damage_Implementation(uint8 damageAmount, const FDamageEvent &DamageEvent)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Damage_Impl"));
 	FMyDamageEvent* f;
 	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
 		f = (FMyDamageEvent*)&DamageEvent;
