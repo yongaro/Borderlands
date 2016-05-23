@@ -156,12 +156,30 @@ void ABCharacter::BeginReload()
 	bIsFiringDisabled = true;
 
 	//Recharge ...
-	if (Weapon != NULL){ 
-		Weapon->reload(); 
-		FirstPersonMesh->PlayAnimation(Weapon->WVisual->FPreloadAnim, false);
+	UWorld* World = GetWorld();
+	if (World != NULL)
+	{
+		if (Weapon != NULL && Weapon->currentTotalAmmunition > 0) {
+			Weapon->reload();
+			FirstPersonMesh->PlayAnimation(Weapon->WVisual->FPreloadAnim, false);
+			float animLen = FirstPersonMesh->GetSingleNodeInstance()->GetLength();
+			FTimerHandle timerHandler;
+			GetWorldTimerManager().SetTimer(timerHandler, this, &ABCharacter::EndReload, animLen, false);
+		}
 	}	
-	//Faudra penser à le remettre à false à la fin ...
+}
+
+void ABCharacter::EndReload()
+{
+	if (Weapon != NULL)
+	{
+		uint8 ammoReloaded = FMath::Min(Weapon->currentTotalAmmunition, (uint8) (Weapon->MagazineSize - Weapon->currentAmmunitionInMagazine));
+		Weapon->currentAmmunitionInMagazine += ammoReloaded;
+		Weapon->currentTotalAmmunition -= ammoReloaded;
+	}
 	bIsFiringDisabled = false;
+	updateAmmunitionAmountOnHUD(Weapon->currentAmmunitionInMagazine, Weapon->currentTotalAmmunition);
+	UE_LOG(LogTemp, Warning, TEXT("End reload"));
 }
 
 FVector ABCharacter::GetCameraLocation()

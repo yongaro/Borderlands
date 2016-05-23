@@ -47,6 +47,7 @@ public:
 	void onFire();
 	void onStopFire();
 	void BeginReload();
+	void EndReload();
 
 	FVector GetCameraLocation();
 	FRotator GetCameraRotation();
