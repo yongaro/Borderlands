@@ -5,8 +5,7 @@
 #include "TestMeshSocket/TestSocket.h"
 
 // Sets default values
-ASpawnActor::ASpawnActor()
-{
+ASpawnActor::ASpawnActor(){
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	const ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane'"));
@@ -18,11 +17,11 @@ ASpawnActor::ASpawnActor()
 	Mesh->SetWorldScale3D(scale);
 	bCanBeDamaged = false;
 	SetActorEnableCollision(false);
+	nbSpawned = 0;
 }
 
 // Called when the game starts or when spawned
-void ASpawnActor::BeginPlay()
-{
+void ASpawnActor::BeginPlay(){
 	Super::BeginPlay();
 	
 }
@@ -44,20 +43,24 @@ void ASpawnActor::spawn() {
 			FRotator rotation = FRotator::ZeroRotator;
 			rotation.Yaw = 90.f;
 			AActor *a = world->SpawnActor<AActor>(whatToSpawn, loc, rotation, params);
+			++nbSpawned;
+			if( nbSpawned < numToSpawn){ 
+				FTimerHandle timerHandler;
+				GetWorldTimerManager().SetTimer(timerHandler, this, &ASpawnActor::spawn, timeBetweenSpawn, false);
+			}
 		}
-		if (bDestroyWhenFinished)
-			Destroy();
+		if(bDestroyWhenFinished && nbSpawned >= numToSpawn){ Destroy(); }
+			
 	}
 }
 
-bool ASpawnActor::onTriggerDesactivated_Implementation(AActor* OtherActor)
-{
+bool ASpawnActor::onTriggerDesactivated_Implementation(AActor* OtherActor){
 	return false;
 }
 
-bool ASpawnActor::onTriggerActivated_Implementation(AActor* OtherActor)
-{
+bool ASpawnActor::onTriggerActivated_Implementation(AActor* OtherActor){
 	spawn();
 	return true;
 }
+
 

@@ -3,6 +3,7 @@
 #include "Borderlands.h"
 #include "character/BCharacter.h"
 #include "character/BorderlandsPlayerController.h"
+#include "character/AI_Character.h"
 #include "weapon/RifleWeaponTypeComponent.h"
 #include "weapon/PistolWeaponTypeComponent.h"
 #include "MyDamageType.h"
@@ -22,10 +23,7 @@ UBorderlandsGameConfigurator::UBorderlandsGameConfigurator()
 	classAssociation.Add(TEXT("Semi-Auto"), UPistolWeaponTypeComponent::StaticClass());
 }
 
-UBorderlandsGameConfigurator::~UBorderlandsGameConfigurator()
-{
-
-}
+UBorderlandsGameConfigurator::~UBorderlandsGameConfigurator(){}
 
 bool UBorderlandsGameConfigurator::LoadFeaturesFromFile()
 {
@@ -161,6 +159,9 @@ void UBorderlandsGameConfigurator::ConfigureGame(UWorld* world)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Err : playerController == nullptr (in UBorderlandsGameConfigurator::ConfigureGame)"));
 		}
+		if (HasFeature("Health")){ AAI_Character::features.Add(FString("Health")); }
+		if (HasFeature("Shield")){ AAI_Character::features.Add(FString("Shield")); }
+		if (HasFeature("Armor")){ AAI_Character::features.Add(FString("Armor")); }
 	}
 	else
 	{

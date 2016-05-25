@@ -16,6 +16,12 @@ enum EB_AIState{
 	dead
 };
 
+UENUM()
+enum EAI_FSM{
+	patrouille,
+	suivre,
+	recherche
+};
 
 UCLASS()
 class BORDERLANDS_API AAI_Character : public ACharacter{
@@ -34,7 +40,9 @@ protected:
 	class UAnimSequence* currentAnim;
 
 public:
+	static TArray<FString> features;
 	EB_AIState state;
+	EAI_FSM curState;
 	// Sets default values for this character's properties
 	AAI_Character();
 
@@ -54,9 +62,12 @@ public:
 	virtual float TakeDamage
 		(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
 
-	bool IsDead();
-	void BeginDeath();
-	void EndDeath();
+	virtual bool IsDead();
+	virtual void BeginDeath();
+	virtual void EndDeath();
+	virtual void goRagdoll();
+	
+	virtual bool HasFeature(FString);
 };
 
 

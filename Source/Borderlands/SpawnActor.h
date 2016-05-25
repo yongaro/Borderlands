@@ -10,7 +10,9 @@ UCLASS()
 class BORDERLANDS_API ASpawnActor : public AActor , public ITriggerableInterface
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, Category = "Config")
 	UStaticMeshComponent* Mesh;
+	int nbSpawned;
 
 public:	
 	// Sets default values for this actor's properties
@@ -24,6 +26,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = "Config")
 		TSubclassOf<class AActor> whatToSpawn;
+	UPROPERTY(EditAnywhere, Category = "Config")
+		int numToSpawn;
+	UPROPERTY(EditAnywhere, Category = "Config")
+		float timeBetweenSpawn;	
 	UPROPERTY(EditAnywhere, Category = "Config")
 		FVector offset;
 	UPROPERTY(EditAnywhere, Category = "Config")

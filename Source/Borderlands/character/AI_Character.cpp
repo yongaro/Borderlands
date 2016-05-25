@@ -8,6 +8,8 @@
 #include "../HealthAbsorber.h"
 #include "AI_Character.h"
 
+TArray<FString> AAI_Character::features = TArray<FString>();
+
 
 // Sets default values
 AAI_Character::AAI_Character(){
@@ -15,6 +17,7 @@ AAI_Character::AAI_Character(){
 	PrimaryActorTick.bCanEverTick = true;
 	
 	const ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshObj(TEXT("SkeletalMesh'/Game/Borderlands/mobs/hyperion/Skel_BattleDroid.Skel_BattleDroid'"));
+	//const ConstructorHelpers::FObjectFinder<UPhysicsAsset> MeshPhy(TEXT("PhysicsAsset'/Game/Borderlands/mobs/hyperion/Skel_BattleDroid_PhysicsAsset.Skel_BattleDroid_PhysicsAsset'"));
 	const ConstructorHelpers::FObjectFinder<UMaterial> MeshMaterial(TEXT("Material'/Game/Borderlands/mobs/hyperion/BattleDroid_Dif_Mat.BattleDroid_Dif_Mat'"));
 
 	const ConstructorHelpers::FObjectFinder<UAnimSequence> hitAnim(TEXT("AnimSequence'/Game/Borderlands/mobs/hyperion/AnimSet/Base_BattleDroid/Melee_Anim.Melee_Anim'"));
@@ -25,7 +28,8 @@ AAI_Character::AAI_Character(){
 	MeshComp = CreateDefaultSubobject< USkeletalMeshComponent >(TEXT("AI_PawnMesh"));
 	FVector offset = FVector(0.0,0.0,-85.0);
 	MeshComp->SetSkeletalMesh(MeshObj.Object);
-	MeshComp->SetMaterial(0, MeshMaterial.Object);	
+	MeshComp->SetMaterial(0, MeshMaterial.Object);
+	//MeshComp->SetPhysicsAsset(MeshPhy.Object);
 	MeshComp->ApplyWorldOffset(offset,false);	
 	MeshComp->AttachTo(RootComponent);
 
@@ -39,6 +43,7 @@ AAI_Character::AAI_Character(){
 
 
 	state = EB_AIState::idle;
+	curState = EAI_FSM::patrouille;
 	hit = hitAnim.Object;
 	idle = idleAnim.Object;
 	walk = walkAnim.Object;
@@ -46,7 +51,7 @@ AAI_Character::AAI_Character(){
 
 	currentAnim = idle;
 	senses->OnSeePawn.AddDynamic( this, &AAI_Character::onSeePlayer );
-	GetCharacterMovement()->MaxWalkSpeed = 250.0; //Vitesse normale -> 400
+	GetCharacterMovement()->MaxWalkSpeed = 275.0; //Vitesse normale -> 400
 
 
 	DamageHandler = CreateDefaultSubobject<UDamageHandler>(TEXT("DamageHandler"));
@@ -74,11 +79,9 @@ void AAI_Character::Tick( float DeltaTime ){
 	Super::Tick( DeltaTime );
 
 	//Check if the character is dead or not
-	if (IsDead()){
-		BeginDeath();
-	}
+	if (IsDead()){ BeginDeath(); }
 
-	//swapIdleWalk();
+	
 	if( state == EB_AIState::dead && currentAnim != death ){
 		currentAnim = death;
 		MeshComp->PlayAnimation(currentAnim,false);
@@ -86,35 +89,32 @@ void AAI_Character::Tick( float DeltaTime ){
 		if (World != NULL){
 			float animLen = MeshComp->GetSingleNodeInstance()->GetLength();
 			FTimerHandle timerHandler;
-			GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::EndDeath, animLen, false);
+			GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::goRagdoll, animLen, false);
 		}
 	} 
 	if( state == EB_AIState::hit && currentAnim != hit ){ currentAnim = hit; MeshComp->PlayAnimation(currentAnim,false); } 
-	if( state == EB_AIState::walk  && currentAnim != walk ){ currentAnim = walk; MeshComp->PlayAnimation(currentAnim,true); }
+	if( state == EB_AIState::walk && currentAnim != walk ){ currentAnim = walk; MeshComp->PlayAnimation(currentAnim,true); }
 	if( state == EB_AIState::idle && currentAnim != idle ){ currentAnim = idle; MeshComp->PlayAnimation(currentAnim,true); } 
 }
 
 // Called to bind functionality to input
 void AAI_Character::SetupPlayerInputComponent(class UInputComponent* InputComponent){
 	Super::SetupPlayerInputComponent(InputComponent);
-
 }
 
 
 void AAI_Character::onSeePlayer( APawn* seen ){	
-	if( controller != NULL){
+	if( controller != NULL && state != EB_AIState::dead ){
 		state = EB_AIState::walk;
 		controller->MoveToActor(seen);
 		
 		float dist = FVector::Dist(seen->GetActorLocation(),GetActorLocation());
-	
-		if( dist < 200.0 ){ state = EB_AIState::hit; }//hitAnim(); }
+		if( dist < 200.0 ){ state = EB_AIState::hit; }
 	}
-	else{ UE_LOG(LogTemp, Warning, TEXT("AAI_Character::onSeePlayer -- pas de AIController")); }
+	if( controller == NULL){ UE_LOG(LogTemp, Warning, TEXT("AAI_Character::onSeePlayer -- pas de AIController")); }
 }
 
-float AAI_Character::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
-{
+float AAI_Character::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser){
 	/*Test pour type de degats*/
 	if (DamageHandler) {
 		return DamageHandler->Execute_Damage(DamageHandler, DamageAmount, DamageEvent);
@@ -128,10 +128,35 @@ bool AAI_Character::IsDead(){
 }
 
 void AAI_Character::BeginDeath(){
-	UE_LOG(LogTemp, Warning, TEXT("Dead"));
 	state = EB_AIState::dead;
 }
 
-void AAI_Character::EndDeath(){
-	Destroy();
+//FMath::RandRange(0,bodies.Num()-1)
+
+void AAI_Character::EndDeath(){ Destroy(); }
+
+void AAI_Character::goRagdoll(){
+	float pi = FGenericPlatformMath::Acos(-1.0);
+	UE_LOG(LogTemp, Warning, TEXT("RAGDOLL"));
+	
+	
+	controller->StopMovement();
+	//Ragdoll
+	MeshComp->SetSimulatePhysics(true);
+	MeshComp->WakeAllRigidBodies();
+	MeshComp->SetAllBodiesSimulatePhysics(true);
+	//Pour inverser
+	//MeshComp->PutAllRigidBodiesToSleep();
+	//MeshComp->SetSimulatePhysics(false);
+	
+	UWorld* World = GetWorld();
+	if (World != NULL){
+		float animLen = MeshComp->GetSingleNodeInstance()->GetLength();
+	
+		FTimerHandle timerHandler;
+		GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::EndDeath, animLen, false);
+	}
 }
+
+
+bool AAI_Character::HasFeature(FString feature){ return AAI_Character::features.Contains(feature); }
