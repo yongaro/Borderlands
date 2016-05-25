@@ -6,6 +6,7 @@
 #include "../Absorber.h"
 #include "../DamageHandler.h"
 #include "../HealthAbsorber.h"
+#include "../weapon/Weapon.h"
 #include "AI_Character.h"
 
 TArray<FString> AAI_Character::features = TArray<FString>();
@@ -17,7 +18,6 @@ AAI_Character::AAI_Character(){
 	PrimaryActorTick.bCanEverTick = true;
 	
 	const ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshObj(TEXT("SkeletalMesh'/Game/Borderlands/mobs/hyperion/Skel_BattleDroid.Skel_BattleDroid'"));
-	//const ConstructorHelpers::FObjectFinder<UPhysicsAsset> MeshPhy(TEXT("PhysicsAsset'/Game/Borderlands/mobs/hyperion/Skel_BattleDroid_PhysicsAsset.Skel_BattleDroid_PhysicsAsset'"));
 	const ConstructorHelpers::FObjectFinder<UMaterial> MeshMaterial(TEXT("Material'/Game/Borderlands/mobs/hyperion/BattleDroid_Dif_Mat.BattleDroid_Dif_Mat'"));
 
 	const ConstructorHelpers::FObjectFinder<UAnimSequence> hitAnim(TEXT("AnimSequence'/Game/Borderlands/mobs/hyperion/AnimSet/Base_BattleDroid/Melee_Anim.Melee_Anim'"));
@@ -25,15 +25,10 @@ AAI_Character::AAI_Character(){
 	const ConstructorHelpers::FObjectFinder<UAnimSequence> walkAnim(TEXT("AnimSequence'/Game/Borderlands/mobs/hyperion/AnimSet/Base_BattleDroid/big_run_F_Anim.big_run_F_Anim'"));
 	const ConstructorHelpers::FObjectFinder<UAnimSequence> deathAnim(TEXT("AnimSequence'/Game/Borderlands/mobs/hyperion/AnimSet/Base_BattleDroid/Death_Var1_Anim.Death_Var1_Anim'"));
 	
-	MeshComp = CreateDefaultSubobject< USkeletalMeshComponent >(TEXT("AI_PawnMesh"));
-	FVector offset = FVector(0.0,0.0,-85.0);
-	MeshComp->SetSkeletalMesh(MeshObj.Object);
-	MeshComp->SetMaterial(0, MeshMaterial.Object);
-	//MeshComp->SetPhysicsAsset(MeshPhy.Object);
-	MeshComp->ApplyWorldOffset(offset,false);	
-	MeshComp->AttachTo(RootComponent);
-
-
+	GetMesh()->SetSkeletalMesh(MeshObj.Object);
+	GetMesh()->SetMaterial(0, MeshMaterial.Object);
+	GetMesh()->SetRelativeLocation(FVector(0.0, 0.0, -85.0));
+	
 	senses = CreateDefaultSubobject< UPawnSensingComponent >(TEXT("senses"));
 	senses->bSeePawns = true;
 	senses->SetPeripheralVisionAngle(55.0);
@@ -69,8 +64,9 @@ void AAI_Character::BeginPlay(){
 		controller = World->SpawnActor<AAI_BController>(AAI_BController::StaticClass(), NewLocation, NewRotation);
 		controller->SetPawn(this);
 		controller->owner = this;
+		mouvement();
 	}
-	MeshComp->PlayAnimation(currentAnim,true);
+	GetMesh()->PlayAnimation(currentAnim,true);
 }
 
 
@@ -84,17 +80,17 @@ void AAI_Character::Tick( float DeltaTime ){
 	
 	if( state == EB_AIState::dead && currentAnim != death ){
 		currentAnim = death;
-		MeshComp->PlayAnimation(currentAnim,false);
+		GetMesh()->PlayAnimation(currentAnim,false);
 		UWorld* World = GetWorld();
 		if (World != NULL){
-			float animLen = MeshComp->GetSingleNodeInstance()->GetLength();
+			float animLen = GetMesh()->GetSingleNodeInstance()->GetLength();
 			FTimerHandle timerHandler;
 			GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::goRagdoll, animLen, false);
 		}
 	} 
-	if( state == EB_AIState::hit && currentAnim != hit ){ currentAnim = hit; MeshComp->PlayAnimation(currentAnim,false); } 
-	if( state == EB_AIState::walk && currentAnim != walk ){ currentAnim = walk; MeshComp->PlayAnimation(currentAnim,true); }
-	if( state == EB_AIState::idle && currentAnim != idle ){ currentAnim = idle; MeshComp->PlayAnimation(currentAnim,true); } 
+	if( state == EB_AIState::hit && currentAnim != hit ){ currentAnim = hit; GetMesh()->PlayAnimation(currentAnim,false); } 
+	if( state == EB_AIState::walk && currentAnim != walk ){ currentAnim = walk; GetMesh()->PlayAnimation(currentAnim,true); }
+	if( state == EB_AIState::idle && currentAnim != idle ){ currentAnim = idle; GetMesh()->PlayAnimation(currentAnim,true); } 
 }
 
 // Called to bind functionality to input
@@ -109,7 +105,15 @@ void AAI_Character::onSeePlayer( APawn* seen ){
 		controller->MoveToActor(seen);
 		
 		float dist = FVector::Dist(seen->GetActorLocation(),GetActorLocation());
-		if( dist < 200.0 ){ state = EB_AIState::hit; }
+		if( dist < 200.0 ){ 
+		state = EB_AIState::hit; 
+		FMyDamageEvent dmgEvent;
+		dmgEvent.dps = 15;
+		dmgEvent.effectChance = 0.8f;
+
+		seen->TakeDamage(20.0,dmgEvent,GetInstigatorController(),this);
+		
+		}
 	}
 	if( controller == NULL){ UE_LOG(LogTemp, Warning, TEXT("AAI_Character::onSeePlayer -- pas de AIController")); }
 }
@@ -131,32 +135,66 @@ void AAI_Character::BeginDeath(){
 	state = EB_AIState::dead;
 }
 
-//FMath::RandRange(0,bodies.Num()-1)
+
 
 void AAI_Character::EndDeath(){ Destroy(); }
 
 void AAI_Character::goRagdoll(){
-	float pi = FGenericPlatformMath::Acos(-1.0);
-	UE_LOG(LogTemp, Warning, TEXT("RAGDOLL"));
-	
+
 	
 	controller->StopMovement();
 	//Ragdoll
-	MeshComp->SetSimulatePhysics(true);
-	MeshComp->WakeAllRigidBodies();
-	MeshComp->SetAllBodiesSimulatePhysics(true);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	GetMesh()->SetCollisionProfileName(FName(TEXT("Ragdoll")));
+	SetActorEnableCollision(true);
+	
+	GetMesh()->SetAllBodiesSimulatePhysics(true);
+    GetMesh()->SetSimulatePhysics(true);
+    GetMesh()->WakeAllRigidBodies();
+    GetMesh()->bBlendPhysics = true;
+    //GetMesh()->AddImpulseAtLocation(Impulse, HitLocation, Bone);
+	
+	GetCharacterMovement()->StopMovementImmediately();
+    GetCharacterMovement()->DisableMovement();
+    GetCharacterMovement()->SetComponentTickEnabled(false);
+	
+	UE_LOG(LogTemp, Warning, TEXT("RAGDOLL"));
 	//Pour inverser
 	//MeshComp->PutAllRigidBodiesToSleep();
 	//MeshComp->SetSimulatePhysics(false);
 	
 	UWorld* World = GetWorld();
 	if (World != NULL){
-		float animLen = MeshComp->GetSingleNodeInstance()->GetLength();
+		float animLen = GetMesh()->GetSingleNodeInstance()->GetLength()*3.0;
 	
 		FTimerHandle timerHandler;
 		GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::EndDeath, animLen, false);
 	}
 }
 
+void AAI_Character::mouvement(){
+	if( state != EB_AIState::dead ){
+		float pi = FGenericPlatformMath::Acos(-1.0);
+		double radius = 400.0;
+		float angle = FMath::RandRange(0,2.0*pi);
+		float x = radius * FGenericPlatformMath::Cos(angle);
+		float y = radius * FGenericPlatformMath::Sin(angle);
+		FVector pos = GetActorLocation();
+		pos.X += x; pos.Y+= y;
+		
+		state = EB_AIState::walk;
+		controller->MoveToLocation(pos);
+		if( curState == EAI_FSM::recherche ){ 
+			controller->StopMovement(); 
+			curState = EAI_FSM::patrouille;
+			state = EB_AIState::idle;
+			
+			float delais = 1.5;
+			FTimerHandle timerHandler;
+			GetWorldTimerManager().SetTimer(timerHandler, this, &AAI_Character::mouvement, delais, false);
+		}
+	}
+}
 
 bool AAI_Character::HasFeature(FString feature){ return AAI_Character::features.Contains(feature); }

@@ -63,6 +63,8 @@ public:
 
 	//Damage Handler
 	class UDamageHandler* DamageHandler;
+	virtual float TakeDamage
+		(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
 
 	//Components
 	void Connect(UActorComponent* comp);

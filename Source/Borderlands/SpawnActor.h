@@ -10,8 +10,8 @@ UCLASS()
 class BORDERLANDS_API ASpawnActor : public AActor , public ITriggerableInterface
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere, Category = "Config")
-	UStaticMeshComponent* Mesh;
+	//UPROPERTY(EditAnywhere, Category = "Config")
+	//UStaticMeshComponent* Mesh;
 	int nbSpawned;
 
 public:	

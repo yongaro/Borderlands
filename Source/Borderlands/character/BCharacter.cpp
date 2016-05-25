@@ -305,6 +305,17 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 	}
 }
 
+float ABCharacter::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser){
+	/*Test pour type de degats*/
+	if (DamageHandler) {
+		return DamageHandler->Execute_Damage(DamageHandler, DamageAmount, DamageEvent);
+	}
+	return 0.0f;
+}
+
+
+
+
 void ABCharacter::Connect(UActorComponent * comp)
 {
 	//DamageHandler ?

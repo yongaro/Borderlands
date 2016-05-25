@@ -29,7 +29,7 @@ class BORDERLANDS_API AAI_Character : public ACharacter{
 protected:
 	class UPawnSensingComponent* senses;
 	class AAI_BController* controller;
-	class USkeletalMeshComponent* MeshComp;
+	//class USkeletalMeshComponent* MeshComp;
 	class UDamageHandler* DamageHandler;
 	
 	class UAnimSequence* hit;
@@ -66,6 +66,7 @@ public:
 	virtual void BeginDeath();
 	virtual void EndDeath();
 	virtual void goRagdoll();
+	virtual void mouvement();
 	
 	virtual bool HasFeature(FString);
 };
@@ -83,6 +84,15 @@ public:
 	AAI_BController( AAI_Character* own ):AAIController(){ owner = own; }
 
 	virtual void OnMoveCompleted( FAIRequestID RequestID, EPathFollowingResult::Type Result ){ 
-		if( Result == EPathFollowingResult::Success ){ owner->state = EB_AIState::idle; }
+		if( Result == EPathFollowingResult::Success ){ 
+			owner->state = EB_AIState::idle;
+			owner->curState = EAI_FSM::recherche;
+			owner->mouvement();
+		}
+		if( Result == EPathFollowingResult::Blocked || Result == EPathFollowingResult::Invalid ){
+			//owner->state = EB_AIState::idle;
+			owner->curState = EAI_FSM::recherche;
+			owner->mouvement();
+		}
 	}
 };

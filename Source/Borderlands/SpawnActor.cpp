@@ -10,11 +10,11 @@ ASpawnActor::ASpawnActor(){
 	PrimaryActorTick.bCanEverTick = false;
 	const ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane'"));
 	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));//
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
-	Mesh->SetStaticMesh(MeshObj.Object);
+	//Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
+	//Mesh->SetStaticMesh(MeshObj.Object);
 	SetActorHiddenInGame(true);
 	FVector scale; scale.X = scale.Y = scale.Z = 0.5f;
-	Mesh->SetWorldScale3D(scale);
+	//Mesh->SetWorldScale3D(scale);
 	bCanBeDamaged = false;
 	SetActorEnableCollision(false);
 	nbSpawned = 0;
