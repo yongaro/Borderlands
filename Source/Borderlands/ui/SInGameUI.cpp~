@@ -32,7 +32,7 @@ void SInGameUI::Construct(const FArguments& InArgs)
 		.HAlign(HAlign_Left)
 		[
 			SNew(SVerticalBox)
-			//Armor
+			//Health
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			[
@@ -41,12 +41,12 @@ void SInGameUI::Construct(const FArguments& InArgs)
 				.AutoWidth()
 				[
 					SNew(STextBlock)
-					.Visibility(this, &SInGameUI::HasArmorAbsorber)
+					.Visibility(this, &SInGameUI::HasHealthAbsorber)
 					.ColorAndOpacity(FLinearColor::White)
 					.ShadowColorAndOpacity(FLinearColor::Black)
 					.ShadowOffset(FIntPoint(-1, 1))
 					.Font(FSlateFontInfo("Arial", 26))
-					.Text(FText::FromString("Armor"))
+					.Text(FText::FromString("Health"))
 				]
 				+ SHorizontalBox::Slot()
 				[
@@ -54,11 +54,11 @@ void SInGameUI::Construct(const FArguments& InArgs)
 					.WidthOverride(600.0f)
 					[
 						SNew(SProgressBar)
-						.Visibility(this, &SInGameUI::HasArmorAbsorber)
+						.Visibility(this, &SInGameUI::HasHealthAbsorber)
 						.BarFillType(EProgressBarFillType::LeftToRight)
-						.FillColorAndOpacity(FLinearColor::Yellow)
+						.FillColorAndOpacity(FLinearColor::Red)
 						//.Percent(0.5f)
-						.Percent(this, &SInGameUI::GetArmorPercentage)
+						.Percent(this, &SInGameUI::GetHealthPercentage)
 					]
 				]
 			]
@@ -92,7 +92,7 @@ void SInGameUI::Construct(const FArguments& InArgs)
 					]
 				]
 			]
-			//Health
+			//Armor
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			[
@@ -101,12 +101,12 @@ void SInGameUI::Construct(const FArguments& InArgs)
 				.AutoWidth()
 				[
 					SNew(STextBlock)
-					.Visibility(this, &SInGameUI::HasHealthAbsorber)
+					.Visibility(this, &SInGameUI::HasArmorAbsorber)
 					.ColorAndOpacity(FLinearColor::White)
 					.ShadowColorAndOpacity(FLinearColor::Black)
 					.ShadowOffset(FIntPoint(-1, 1))
 					.Font(FSlateFontInfo("Arial", 26))
-					.Text(FText::FromString("Health"))
+					.Text(FText::FromString("Armor"))
 				]
 				+ SHorizontalBox::Slot()
 				[
@@ -114,11 +114,11 @@ void SInGameUI::Construct(const FArguments& InArgs)
 					.WidthOverride(600.0f)
 					[
 						SNew(SProgressBar)
-						.Visibility(this, &SInGameUI::HasHealthAbsorber)
+						.Visibility(this, &SInGameUI::HasArmorAbsorber)
 						.BarFillType(EProgressBarFillType::LeftToRight)
-						.FillColorAndOpacity(FLinearColor::Red)
+						.FillColorAndOpacity(FLinearColor::Yellow)
 						//.Percent(0.5f)
-						.Percent(this, &SInGameUI::GetHealthPercentage)
+						.Percent(this, &SInGameUI::GetArmorPercentage)
 					]
 				]
 			]

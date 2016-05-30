@@ -34,7 +34,7 @@ void ASpawnerTrigger::spawn(){
 			params.Owner = this;
 			params.bNoCollisionFail = true;
 			FVector loc = GetActorLocation()+offset;
-			FRotator rotation = FRotator::ZeroRotator;
+			FRotator rotation = FRotator::ZeroRota	tor;
 			rotation.Yaw = 90.f;
 			AActor *a = world->SpawnActor<AActor>(whatToSpawn, loc, rotation, params);
 			++nbSpawned;

@@ -32,5 +32,4 @@ class BORDERLANDS_API ASpawnerTrigger : public ATrigger{
 	//virtual void Tick(float DeltaSeconds) override;
 	private:
 		virtual void OverlapStart(AActor* OtherActor) override;
-		virtual void spawn();
 };

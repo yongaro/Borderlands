@@ -31,7 +31,7 @@ AAI_Character::AAI_Character(){
 	
 	senses = CreateDefaultSubobject< UPawnSensingComponent >(TEXT("senses"));
 	senses->bSeePawns = true;
-	senses->SetPeripheralVisionAngle(65.0);
+	senses->SetPeripheralVisionAngle(55.0);
 	senses->SightRadius = 2500.0;
 	senses->SetSensingUpdatesEnabled(true);
 	//senses->SetSensingInterval(0.3); //Unreal crash generator
