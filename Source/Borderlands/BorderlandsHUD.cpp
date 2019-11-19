@@ -1,7 +1,7 @@
 // Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 
-#include "Borderlands.h"
 #include "BorderlandsHUD.h"
+#include "Borderlands.h"
 #include "Engine.h"
 #include "Engine/Canvas.h"
 #include "TextureResource.h"
@@ -35,10 +35,8 @@ ABorderlandsHUD::ABorderlandsHUD(const FObjectInitializer& ObjectInitializer)
 void ABorderlandsHUD::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
 	
 	SAssignNew(InGameUI, SInGameUI).BorderlandsHUD(this);
-	UE_LOG(LogTemp, Warning, TEXT("SAssignNew"));
 
 	if (GEngine->IsValidLowLevel())
 	{

@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "WeapGraphicComp.h"
+#include "Borderlands.h"
+
 
 
 void  UWeapGraphicComp::defaultWeap(){

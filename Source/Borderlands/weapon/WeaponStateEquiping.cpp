@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "WeaponStateEquiping.h"
+#include "Borderlands.h"
 
 UWeaponStateEquiping::UWeaponStateEquiping()
 {

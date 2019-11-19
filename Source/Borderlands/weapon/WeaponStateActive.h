@@ -20,6 +20,4 @@ public:
 
 	virtual bool BeginFiringSequence(bool bClientFired);
 	virtual bool EndFiringSequence(bool bClientFired);
-
-	virtual void Log() { UE_LOG(LogTemp, Warning, TEXT("WeaponStateActive")); }
 };

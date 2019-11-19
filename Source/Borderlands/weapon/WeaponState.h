@@ -20,8 +20,6 @@ public:
 	virtual bool BeginFiringSequence(bool bClientFired) { return false; }
 	virtual bool EndFiringSequence(bool bClientFired) { return false; }
 
-	virtual void Log() { UE_LOG(LogTemp, Warning, TEXT("WeaponState")); }
-
 	class AWeapon* OuterWeapon;
 	AWeapon* GetOuterWeapon() const { return OuterWeapon; }
 };

@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "BCharacter.h"
 #include "Borderlands.h"
 #include "../weapon/Weapon.h"
 #include "../weapon/WeaponTypeComponent.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
 #include "../DamageHandler.h"
 #include "BorderlandsPlayerController.h"
-#include "BCharacter.h"
+#include "Animation/AnimSingleNodeInstance.h"
+
 /*
 ENGINE_API void DrawDebugLine(
 	const UWorld* InWorld,
@@ -32,14 +34,16 @@ ABCharacter::ABCharacter()
 
 	//Camera component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->AttachParent = GetCapsuleComponent();
+	// CameraComponent->AttachParent = GetCapsuleComponent();
+	CameraComponent->SetupAttachment(GetCapsuleComponent());
 	CameraComponent->RelativeLocation = FVector(0, 0, 64.f);
 	CameraComponent->bUsePawnControlRotation = true;
 
 	//First person mesh
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);
-	FirstPersonMesh->AttachParent = CameraComponent;
+	// FirstPersonMesh->AttachParent = CameraComponent;
+	FirstPersonMesh->SetupAttachment(CameraComponent);
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
 
@@ -83,7 +87,9 @@ void ABCharacter::BeginPlay()
 		FirstPersonMesh->PlayAnimation(IdleAnimation, true);
 		if(Weapon != NULL){
 			//Weapon->AttachRootComponentToActor(this,TEXT("R_Weapon_Bone"),EAttachLocation::SnapToTargetIncludingScale,true);
-			Weapon->GetRootComponent()->AttachTo(FirstPersonMesh,TEXT("R_Weapon_Bone"), EAttachLocation::SnapToTargetIncludingScale, true);
+			Weapon->GetRootComponent()->AttachToComponent(FirstPersonMesh,
+			                                             {EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, true},
+			                                             TEXT("R_Weapon_Bone"));
 		}
 	}
 }
@@ -135,7 +141,6 @@ void ABCharacter::onFire()
 {
 	if (Weapon != NULL)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Fire pressed"));
 		Weapon->StartFire();
 	}
 }
@@ -144,7 +149,6 @@ void ABCharacter::onStopFire()
 {
 	if (Weapon != NULL)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Fire released"));
 		Weapon->EndFire();
 	}
 }
@@ -152,7 +156,6 @@ void ABCharacter::onStopFire()
 void ABCharacter::BeginReload()
 {
 	//On ne tire pas pendant le rechargement
-	UE_LOG(LogTemp, Warning, TEXT("Begin reload..."));
 	bIsFiringDisabled = true;
 
 	//Recharge ...
@@ -166,7 +169,7 @@ void ABCharacter::BeginReload()
 			FTimerHandle timerHandler;
 			GetWorldTimerManager().SetTimer(timerHandler, this, &ABCharacter::EndReload, animLen, false);
 		}
-	}	
+	}
 }
 
 void ABCharacter::EndReload()
@@ -179,7 +182,6 @@ void ABCharacter::EndReload()
 	}
 	bIsFiringDisabled = false;
 	updateAmmunitionAmountOnHUD(Weapon->currentAmmunitionInMagazine, Weapon->currentTotalAmmunition);
-	UE_LOG(LogTemp, Warning, TEXT("End reload"));
 }
 
 FVector ABCharacter::GetCameraLocation()
@@ -202,14 +204,14 @@ void ABCharacter::traceLine(FHitResult & HitResult)
 	FVector CameraLoc = GetCameraLocation();
 	FRotator CameraRot = GetCameraRotation();
 	const FVector TraceDirection = CameraRot.Vector();
-	//Portée
+	//Portï¿½e
 	const float TraceRange = 4096.0f;
 	//Calcul EndPoint
 	const FVector EndTrace = CameraLoc + TraceDirection * TraceRange;
 	//Trace Query ?
 	static FName FireTraceIdent = FName(TEXT("WeaponTrace"));
 	FCollisionQueryParams TraceParams(FireTraceIdent, true, this);
-	TraceParams.bTraceAsyncScene = true;
+	// TraceParams.bTraceAsyncScene = true;
 
 	//LE TRACAGE
 	UWorld* World = GetWorld();
@@ -277,13 +279,11 @@ void ABCharacter::UpdateArmorAmountOnHUD(bool HasArmorAmount, uint8 CurrentArmor
 void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 {
 	UWorld* World = GetWorld();
-	//UE_LOG(LogTemp, Warning, TEXT("Appel SpawnWeapon()"));
 
 	if (World != NULL)
 	{
 		if (Weapon != NULL)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Destruction arme"));
 			Weapon->DestroyWeapon();
 		}
 		FVector NewLocation = GetActorLocation() + WeaponOffset;
@@ -291,7 +291,7 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 		Weapon = World->SpawnActor<AWeapon>(DefaultWeaponClass, NewLocation, NewRotation);
 		if (Weapon == NULL)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Echec creation arme"));
+			UE_LOG(LogTemp, Warning, TEXT("Failed to create the weapon"));
 		}
 		else
 		{
@@ -300,7 +300,9 @@ void ABCharacter::SpawnWeapon(struct FWeaponInventoryItem WeaponInventoryItem)
 			Weapon->resupply();
 			updateAmmunitionAmountOnHUD(Weapon->currentAmmunitionInMagazine, Weapon->currentTotalAmmunition);
 			//Weapon->AttachRootComponentTo(CameraComponent, NAME_None, EAttachLocation::SnapToTarget);
-			Weapon->GetRootComponent()->AttachTo(FirstPersonMesh, TEXT("R_Weapon_Bone"), EAttachLocation::SnapToTargetIncludingScale, true);
+			Weapon->GetRootComponent()->AttachToComponent(FirstPersonMesh,
+			                                              {EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, true},
+			                                              TEXT("R_Weapon_Bone"));
 		}
 	}
 }

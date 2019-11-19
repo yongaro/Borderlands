@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "BorderlandsGameConfigurator.h"
 #include "Borderlands.h"
 #include "character/BCharacter.h"
 #include "character/BorderlandsPlayerController.h"
@@ -12,7 +13,6 @@
 #include "ShieldAbsorber.h"
 #include "ArmorAbsorber.h"
 #include "DamageHandler.h"
-#include "BorderlandsGameConfigurator.h"
 
 UBorderlandsGameConfigurator::UBorderlandsGameConfigurator()
 {
@@ -27,13 +27,10 @@ UBorderlandsGameConfigurator::~UBorderlandsGameConfigurator(){}
 
 bool UBorderlandsGameConfigurator::LoadFeaturesFromFile()
 {
-	FString GameDir = FPaths::GameDir();
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GameDir);
+	FString CompleteFilePath = FPaths::ProjectContentDir() + "Borderlands/config/default.config";
 	FString FileData = "";
-	FString CompleteFilePath = GameDir + "default.config";
 
 	FFileHelper::LoadFileToString(FileData, *CompleteFilePath);
-	//UE_LOG(LogTemp, Warning, TEXT("FileData : \"%s\""), *FileData);
 	if (FileData == "")
 	{
 		return false;

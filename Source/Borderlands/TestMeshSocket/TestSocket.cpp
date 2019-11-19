@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "TestSocket.h"
+#include "Borderlands.h"
 #include "Runtime/Engine/Classes/Animation/AnimSequence.h"
 
 // Sets default values
@@ -25,7 +25,10 @@ ATestSocket::ATestSocket()
 	HeadMesh->SetMaterial(0, HeadMeshMaterial.Object);
 
 	
-	MeshComp->AttachTo(HeadMesh, TEXT("Head"), EAttachLocation::SnapToTargetIncludingScale, true);
+	// MeshComp->AttachTo(HeadMesh, TEXT("Head"), EAttachLocation::SnapToTargetIncludingScale, true);
+	MeshComp->AttachToComponent(HeadMesh,
+			                    {EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, false},
+	                            TEXT("Head"));
 	const ConstructorHelpers::FObjectFinder<UAnimSequence> FUU(TEXT("AnimSequence'/Game/Borderlands/characters/claptrap/TP/AnimSet/Anim_Prototype_Skills/antic_dance_var5_Anim.antic_dance_var5_Anim'"));
 	Anime = FUU.Object;
 }

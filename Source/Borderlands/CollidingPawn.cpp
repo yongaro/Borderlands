@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "CollidingPawn.h"
+#include "Borderlands.h"
 #include "CollidingPawnMovementComponent.h"
 #include "weapon/Weapon.h"
 #include "weapon/RifleWeaponTypeComponent.h"
@@ -21,7 +21,7 @@ ACollidingPawn::ACollidingPawn()
 
 	// Create and position a mesh component so we can see where our sphere is
 	SphereVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
-	SphereVisual->AttachTo(RootComponent);
+	SphereVisual->SetupAttachment(RootComponent);// SphereVisual->AttachTo(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
 	if (SphereVisualAsset.Succeeded())
 	{
@@ -32,7 +32,7 @@ ACollidingPawn::ACollidingPawn()
 
 	// Create a particle system that we can activate or deactivate
 	OurParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MovementParticles"));
-	OurParticleSystem->AttachTo(SphereVisual);
+	OurParticleSystem->SetupAttachment(SphereVisual);// OurParticleSystem->AttachTo(SphereVisual);
 	OurParticleSystem->bAutoActivate = false;
 	OurParticleSystem->SetRelativeLocation(FVector(-20.0f, 0.0f, 20.0f));
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset(TEXT("/Game/StarterContent/Particles/P_Fire.P_Fire"));
@@ -43,7 +43,10 @@ ACollidingPawn::ACollidingPawn()
 
 	// Use a spring arm to give the camera smooth, natural-feeling motion.
 	USpringArmComponent* SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraAttachmentArm"));
-	SpringArm->AttachTo(RootComponent);
+	// SpringArm->AttachTo(RootComponent);
+	SpringArm->SetupAttachment(RootComponent);
+	// SpringArm->AttachToComponent(RootComponent,
+	                            //  {EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, true});
 	SpringArm->RelativeRotation = FRotator(-25.f, 0.f, 0.f);
 	SpringArm->TargetArmLength = 400.0f;
 	SpringArm->bEnableCameraLag = true;
@@ -51,7 +54,8 @@ ACollidingPawn::ACollidingPawn()
 
 	// Create a camera and attach to our spring arm
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("ActualCamera"));
-	Camera->AttachTo(SpringArm, USpringArmComponent::SocketName);
+	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+	// Camera->AttachTo(SpringArm, USpringArmComponent::SocketName);
 
 	// Take control of the default player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -74,7 +78,7 @@ void ACollidingPawn::BeginPlay()
 		Weapon = World->SpawnActor<AWeapon>(WeaponClass, NewLocation, NewRotation);
 		if (Weapon == NULL)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("YA PAS D'ARME wat do"));
+			UE_LOG(LogTemp, Warning, TEXT("No weapon available"));
 		}
 		else
 		{
@@ -160,7 +164,6 @@ void ACollidingPawn::onFire()
 {
 	if (Weapon != NULL)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Fire pressed"));
 		Weapon->StartFire();
 	}
 }
@@ -169,7 +172,6 @@ void ACollidingPawn::onStopFire()
 {
 	if (Weapon != NULL)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Fire released"));
 		Weapon->EndFire();
 	}
 }
@@ -190,14 +192,14 @@ void ACollidingPawn::traceLine(FHitResult & HitResult)
 	FVector CameraLoc = GetCameraLocation();
 	FRotator CameraRot = GetCameraRotation();
 	const FVector TraceDirection = CameraRot.Vector();
-	//Portée
+	//Portï¿½e
 	const float TraceRange = 4096.0f;
 	//Calcul EndPoint
 	const FVector EndTrace = CameraLoc + TraceDirection * TraceRange;
-	//Trace Query ? mdr je sé pa
+	//Trace Query ? mdr je sï¿½ pa
 	static FName FireTraceIdent = FName(TEXT("WeaponTrace"));
 	FCollisionQueryParams TraceParams(FireTraceIdent, true, this);
-	TraceParams.bTraceAsyncScene = true; 
+	// TraceParams.bTraceAsyncScene = true; // deprecated ? 
 
 	//LE TRACAGE
 	UWorld* World = GetWorld();

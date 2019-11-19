@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "ElectricDamageType.h"
+#include "Borderlands.h"
 
 FString UElectricDamageType::getText()
 {

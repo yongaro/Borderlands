@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "SpawnerTrigger.h"
 #include "Borderlands.h"
 #include "SpawnActor.h"
-#include "SpawnerTrigger.h"
+
 
 ASpawnerTrigger::ASpawnerTrigger(){
 	nbSpawned = 0;
@@ -11,16 +12,7 @@ ASpawnerTrigger::ASpawnerTrigger(){
 void ASpawnerTrigger::OverlapStart(AActor* OtherActor)
 {
 
-	TArray<AActor*> ovAct;
-	//TriggerBox->GetOverlappingActors(ovAct,ASpawnActor::StaticClass());
-	//UE_LOG(LogTemp, Warning, TEXT("Getting spawners %i"),ovAct.Num());
-
-	//for (AActor* sa : ovAct) {
-		//ASpawnActor* spawner = Cast<ASpawnActor>(sa);
-		//if (spawner!=NULL) {
-			//triggerActions.Add(spawner);
-		//}
-	//}
+	// TArray<AActor*> ovAct;
 	spawn();
 	Super::OverlapStart(OtherActor);
 }
@@ -32,7 +24,9 @@ void ASpawnerTrigger::spawn(){
 		if (world) {
 			FActorSpawnParameters params;
 			params.Owner = this;
-			params.bNoCollisionFail = true;
+			// params.bNoCollisionFail = true; obosolete replaced by NoFail or the handling override.
+			// params.bNoFail = true;
+			params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			FVector loc = GetActorLocation()+offset;
 			FRotator rotation = FRotator::ZeroRotator;
 			rotation.Yaw = 90.f;

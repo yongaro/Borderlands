@@ -1,13 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "AI_Character.h"
 #include "Borderlands.h"
+#include "Animation/AnimSingleNodeInstance.h"
 #include "Runtime/AIModule/Classes/Perception/PawnSensingComponent.h"
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "../Absorber.h"
 #include "../DamageHandler.h"
 #include "../HealthAbsorber.h"
 #include "../weapon/Weapon.h"
-#include "AI_Character.h"
+#include "../ElectricDamageType.h"
+
 
 TArray<FString> AAI_Character::features = TArray<FString>();
 
@@ -117,7 +120,6 @@ void AAI_Character::onSeePlayer( APawn* seen ){
 		
 		}
 	}
-	if( controller == NULL){ UE_LOG(LogTemp, Warning, TEXT("AAI_Character::onSeePlayer -- pas de AIController")); }
 }
 
 float AAI_Character::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser){
@@ -161,7 +163,6 @@ void AAI_Character::goRagdoll(){
     GetCharacterMovement()->DisableMovement();
     GetCharacterMovement()->SetComponentTickEnabled(false);
 	
-	UE_LOG(LogTemp, Warning, TEXT("RAGDOLL"));
 	//Pour inverser
 	//MeshComp->PutAllRigidBodiesToSleep();
 	//MeshComp->SetSimulatePhysics(false);

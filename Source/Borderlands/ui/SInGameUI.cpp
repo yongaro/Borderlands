@@ -1,9 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "SInGameUI.h"
+#include "Borderlands.h"
 #include "SlateOptMacros.h"
 #include "../BorderlandsHUD.h"
+
+
+// const FName SInGameUI::s_font_name = "Roboto-Bold";
+const FString SInGameUI::s_font_name = FPaths::ProjectContentDir() + "Font/AnonymousPro-Bold.ttf";
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SInGameUI::Construct(const FArguments& InArgs)
@@ -22,7 +26,7 @@ void SInGameUI::Construct(const FArguments& InArgs)
 			.ColorAndOpacity(FLinearColor::White)
 			.ShadowColorAndOpacity(FLinearColor::Black)
 			.ShadowOffset(FIntPoint(-1, 1))
-			.Font(FSlateFontInfo("Arial", 26))
+			.Font(FSlateFontInfo(s_font_name, 26))
 			.Text(this, &SInGameUI::GetAmmunitionText)
 		]
 
@@ -32,36 +36,6 @@ void SInGameUI::Construct(const FArguments& InArgs)
 		.HAlign(HAlign_Left)
 		[
 			SNew(SVerticalBox)
-			//Armor
-			+ SVerticalBox::Slot()
-			.AutoHeight()
-			[
-				SNew(SHorizontalBox)
-				+ SHorizontalBox::Slot()
-				.AutoWidth()
-				[
-					SNew(STextBlock)
-					.Visibility(this, &SInGameUI::HasArmorAbsorber)
-					.ColorAndOpacity(FLinearColor::White)
-					.ShadowColorAndOpacity(FLinearColor::Black)
-					.ShadowOffset(FIntPoint(-1, 1))
-					.Font(FSlateFontInfo("Arial", 26))
-					.Text(FText::FromString("Armor"))
-				]
-				+ SHorizontalBox::Slot()
-				[
-					SNew(SBox)
-					.WidthOverride(600.0f)
-					[
-						SNew(SProgressBar)
-						.Visibility(this, &SInGameUI::HasArmorAbsorber)
-						.BarFillType(EProgressBarFillType::LeftToRight)
-						.FillColorAndOpacity(FLinearColor::Yellow)
-						//.Percent(0.5f)
-						.Percent(this, &SInGameUI::GetArmorPercentage)
-					]
-				]
-			]
 			//Shield
 			+ SVerticalBox::Slot()
 			.AutoHeight()
@@ -75,8 +49,8 @@ void SInGameUI::Construct(const FArguments& InArgs)
 					.ColorAndOpacity(FLinearColor::White)
 					.ShadowColorAndOpacity(FLinearColor::Black)
 					.ShadowOffset(FIntPoint(-1, 1))
-					.Font(FSlateFontInfo("Arial", 26))
-					.Text(FText::FromString("Shield"))
+					.Font(FSlateFontInfo(s_font_name, 26))
+					.Text(FText::FromString("Shield "))
 				]
 				+ SHorizontalBox::Slot()
 				[
@@ -87,8 +61,38 @@ void SInGameUI::Construct(const FArguments& InArgs)
 						.Visibility(this, &SInGameUI::HasShieldAbsorber)
 						.BarFillType(EProgressBarFillType::LeftToRight)
 						.FillColorAndOpacity(FLinearColor::Green)
-						//.Percent(0.5f)
+						// .Percent(0.5f)
 						.Percent(this, &SInGameUI::GetShieldPercentage)
+					]
+				]
+			]
+			//Armor
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SNew(SHorizontalBox)
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				[
+					SNew(STextBlock)
+					.Visibility(this, &SInGameUI::HasArmorAbsorber)
+					.ColorAndOpacity(FLinearColor::White)
+					.ShadowColorAndOpacity(FLinearColor::Black)
+					.ShadowOffset(FIntPoint(-1, 1))
+					.Font(FSlateFontInfo(s_font_name, 26))
+					.Text(FText::FromString("Armor  "))
+				]
+				+ SHorizontalBox::Slot()
+				[
+					SNew(SBox)
+					.WidthOverride(600.0f)
+					[
+						SNew(SProgressBar)
+						.Visibility(this, &SInGameUI::HasArmorAbsorber)
+						.BarFillType(EProgressBarFillType::LeftToRight)
+						.FillColorAndOpacity(FLinearColor::Yellow)
+						//.Percent(0.5f)
+						.Percent(this, &SInGameUI::GetArmorPercentage)
 					]
 				]
 			]
@@ -105,8 +109,8 @@ void SInGameUI::Construct(const FArguments& InArgs)
 					.ColorAndOpacity(FLinearColor::White)
 					.ShadowColorAndOpacity(FLinearColor::Black)
 					.ShadowOffset(FIntPoint(-1, 1))
-					.Font(FSlateFontInfo("Arial", 26))
-					.Text(FText::FromString("Health"))
+					.Font(FSlateFontInfo(s_font_name, 26))
+					.Text(FText::FromString("Health "))
 				]
 				+ SHorizontalBox::Slot()
 				[
@@ -124,8 +128,6 @@ void SInGameUI::Construct(const FArguments& InArgs)
 			]
 		]	
 	];
-	
-	UE_LOG(LogTemp, Warning, TEXT("Construct"));
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 

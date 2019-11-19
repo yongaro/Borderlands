@@ -5,21 +5,22 @@ using System.Collections.Generic;
 
 public class BorderlandsTarget : TargetRules
 {
-	public BorderlandsTarget(TargetInfo Target)
+	public BorderlandsTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
+		ExtraModuleNames.Add("Borderlands");
 	}
 
 	//
 	// TargetRules interface.
 	//
 
-	public override void SetupBinaries(
-		TargetInfo Target,
-		ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
-		ref List<string> OutExtraModuleNames
-		)
-	{
-		OutExtraModuleNames.Add("Borderlands");
-	}
+	// public override void SetupBinaries(
+	// 	TargetInfo Target,
+	// 	ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
+	// 	ref List<string> OutExtraModuleNames
+	// 	)
+	// {
+	// 	OutExtraModuleNames.Add("Borderlands");
+	// }
 }

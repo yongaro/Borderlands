@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "DamageActor.h"
+#include "Borderlands.h"
 #include "ElectricDamageType.h"
 
 
@@ -34,11 +34,11 @@ float ADamageActor::TakeDamage(float DamageAmount, FDamageEvent const & DamageEv
 	if (dmgHandler) {
 		UElectricDamageType *DamageType = Cast<UElectricDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
 		if (DamageType) {
-			UE_LOG(LogTemp, Warning, TEXT("Aie %s %f"), *(DamageType->getText()), DamageAmount);
+			// More on damage routine can be placed here.
 		}
 
 		if (dmgHandler->Damage(DamageAmount, DamageEvent)) {
-			UE_LOG(LogTemp, Warning, TEXT("Je meurs"));
+			// Place death more death routines here.
 		}
 	}
 	return 0.0f;

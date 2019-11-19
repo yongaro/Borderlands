@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Components/SphereComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Pawn.h"
 #include "CollidingPawn.generated.h"
 

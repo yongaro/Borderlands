@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "WeaponGraphic.h"
 #include "Borderlands.h"
 #include "XmlParser.h"
-#include "WeaponGraphic.h"
+
 
 TArray<FWeaponsParts*>* AWeaponGraphic::weaponsParts = NULL;
 
@@ -67,7 +68,10 @@ void AWeaponGraphic::defaultWeap(){
 void AWeaponGraphic::bind(){
 	if( meshes.Num() > 2 ){
 		for(size_t i = 0; i != meshes.Num(); ++i){
-			meshes[i]->AttachTo( RootComponent, TEXT("Root"), EAttachLocation::SnapToTargetIncludingScale, true);
+			// meshes[i]->AttachTo( RootComponent, TEXT("Root"), EAttachLocation::SnapToTargetIncludingScale, true);
+			meshes[i]->AttachToComponent(RootComponent,
+			                             {EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, false},
+			                             TEXT("Root"));
 		}
 	}
 }
@@ -88,8 +92,13 @@ void AWeaponGraphic::reload(){
 	}
 }
 
-void AWeaponGraphic::attachTo( AActor* actor, FName socket, EAttachLocation::Type location, bool bWeldSimulatedBodies){
-	AttachRootComponentToActor(actor,socket,location,bWeldSimulatedBodies);
+void AWeaponGraphic::attachTo(AActor* actor, FName socket, EAttachLocation::Type location, bool bWeldSimulatedBodies){
+	// AttachRootComponentToActor(actor,socket,location,bWeldSimulatedBodies);
+	// TODO attachment rules replaced the attach locations.
+	AttachToActor(actor, {EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, bWeldSimulatedBodies}, socket);
+	// Weapon->GetRootComponent()->AttachToComponent(FirstPersonMesh,
+			                                            //  {EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, true},
+			                                            //  TEXT("R_Weapon_Bone"));
 }
 
 USkeletalMeshComponent* AWeaponGraphic::getRoot(){ return meshes[0]; }
@@ -98,7 +107,7 @@ void AWeaponGraphic::loadXML(){
 	if( AWeaponGraphic::weaponsParts == NULL ){ 
 		AWeaponGraphic::weaponsParts = new TArray<FWeaponsParts*>( );
 		/*Lecture d'un fichier XML*/
-		FString pathToFile = FPaths::GameContentDir(); pathToFile+="Borderlands/weapons/weapons.xml";
+		FString pathToFile = FPaths::ProjectContentDir() + "Borderlands/config/weapons.xml";
 		FXmlFile *file = new FXmlFile(pathToFile);
 
 		FWeaponsParts* collection = NULL;
@@ -110,23 +119,16 @@ void AWeaponGraphic::loadXML(){
 			if( root != nullptr ){
 				TArray<FXmlNode*> weaponTypes = root->GetChildrenNodes();
 				for( FXmlNode* weaponType : weaponTypes ){
-					
-					//UE_LOG(LogTemp, Warning,TEXT("%s"), *(weaponType->GetAttribute(FString("value"))) );
 					collection = AWeaponGraphic::getWtype( weaponType->GetAttribute(FString("value")) );
 					TArray<FXmlNode*> categories = weaponType->GetChildrenNodes();
 					for( FXmlNode* category : categories ){
-						
-						//UE_LOG(LogTemp, Warning,TEXT("	%s"), *(category->GetAttribute(FString("value"))) );
 						cat = category->GetAttribute(FString("value"));
 						TArray<FXmlNode*> parts = category->GetChildrenNodes();
 						for( FXmlNode* part : parts ){
-							
-							//UE_LOG(LogTemp, Warning,TEXT("		%s"), *(part->GetAttribute(FString("manufacturer"))) );
 							cur = new FPart();
 							cur->manufacturer = part->GetAttribute(FString("manufacturer"));
 							TArray<FXmlNode*> descs = part->GetChildrenNodes()[0]->GetChildrenNodes();
 							for( FXmlNode* d : descs ){
-								//UE_LOG(LogTemp, Warning,TEXT("%s -- %s"), *(d->GetAttribute(FString("name"))), *(d->GetAttribute(FString("value"))) );
 								cur->desc.Add( d->GetAttribute(FString("name")),d->GetAttribute(FString("value")) );
 							}
 							collection->Add(cur,cat);	
@@ -135,11 +137,11 @@ void AWeaponGraphic::loadXML(){
 				}
 			}
 			else{
-				UE_LOG(LogTemp, Warning, TEXT("No root"));
+				UE_LOG(LogTemp, Warning, TEXT("No root in the XML file"));
 			}
 		}
 		else{
-			UE_LOG(LogTemp, Warning,TEXT("Fichier introuvable : %s"), *pathToFile);
+			UE_LOG(LogTemp, Warning,TEXT("WeaponGraphic can't find : %s"), *pathToFile);
 		}
 	}
 }

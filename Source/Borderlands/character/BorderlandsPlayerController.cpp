@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "BorderlandsPlayerController.h"
 #include "Borderlands.h"
 #include "BCharacter.h"
 #include "../weapon/Weapon.h"
@@ -7,7 +8,7 @@
 #include "../MyDamageType.h"
 #include "../weapon/RifleWeaponTypeComponent.h"
 #include "../BorderlandsHUD.h"
-#include "BorderlandsPlayerController.h"
+
 
 ABorderlandsPlayerController::ABorderlandsPlayerController()
 {
@@ -112,7 +113,7 @@ void ABorderlandsPlayerController::CommandLookUp(float value)
 }
 
 /*
-	Ici, on pourra "configurer" les armes par défaut du joueur (depuis un eventuel fichier XML ?)
+	Ici, on pourra "configurer" les armes par dï¿½faut du joueur (depuis un eventuel fichier XML ?)
 */
 void ABorderlandsPlayerController::SetupDefaultInventory()
 {

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "Weapon.h"
+#include "Borderlands.h"
 #include "CollidingPawn.h"
 #include "WeaponState.h"
 #include "WeaponStateActive.h"
@@ -60,7 +60,8 @@ void AWeapon::BeginPlay(){
 	if (world) {
 		FActorSpawnParameters params;
 		params.Owner = this;
-		params.bNoCollisionFail = true;
+		// params.bNoCollisionFail = true;
+		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		FVector loc = GetActorLocation();
 		FRotator rotation = FRotator::ZeroRotator;
 		WVisual = world->SpawnActor<AWeaponGraphic>(AWeaponGraphic::StaticClass(),loc,rotation,params);
@@ -127,7 +128,7 @@ void AWeapon::StartFire()
 	if (Owner != NULL && !Owner->bIsFiringDisabled) {
 
 		bool bClientFired = BeginFiringSequence(false);
-		//Code réseau ici, avec checking de role et envoi de message au serveur
+		// Network code here
 		/*if (Role < ROLE_Authority)
 		{
 			ServerStartFire(bClientFired);
@@ -141,7 +142,7 @@ void AWeapon::EndFire()
 	if (Owner != NULL)
 	{
 		bool bClientFired = EndFiringSequence(false);
-		//Code réseau ici, avec checking de role et envoi de message au serveur
+		// Network code here
 		/*if (Role < ROLE_Authority)
 		{
 		ServerStartFire(bClientFired);
@@ -152,8 +153,7 @@ void AWeapon::EndFire()
 
 bool AWeapon::BeginFiringSequence(bool bClientFired)
 {
-	if (Owner != NULL){
-		//UE_LOG(LogTemp, Warning, TEXT("AWeapon::BeginFiringSequence()"));
+	if (Owner != NULL){;
 		bool bResult = CurrentState->BeginFiringSequence(bClientFired);
 		return bResult;
 	}
@@ -164,7 +164,6 @@ bool AWeapon::EndFiringSequence(bool bClientFired)
 {
 	if (Owner != NULL)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("AWeapon::EndFiringSequence()"));
 		bool bResult = CurrentState->EndFiringSequence(bClientFired);
 		return bResult;
 	}

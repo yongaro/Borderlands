@@ -4,8 +4,10 @@ using UnrealBuildTool;
 
 public class Borderlands : ModuleRules
 {
-	public Borderlands(TargetInfo Target)
+	public Borderlands(ReadOnlyTargetRules Target) : base(Target)
 	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "XmlParser","AIModule" });
 		
 		//For Slate UI Framework

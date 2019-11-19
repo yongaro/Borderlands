@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "Trigger.h"
+#include "Borderlands.h"
+
 
 
 // Sets default values
@@ -34,18 +35,19 @@ void ATrigger::Tick(float DeltaTime)
 
 
 
-void ATrigger::OnTriggerOverlapBegin(AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+
+void ATrigger::OnTriggerOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor != NULL && OtherActor != this ) {
-		UE_LOG(LogTemp, Warning, TEXT("OnTriggerOverlapBegin"));
 		OverlapStart(OtherActor);
 	}
 }
-void ATrigger::OnTriggerOverlapEnd(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+
+
+void ATrigger::OnTriggerOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
 	if (OtherActor != NULL && OtherActor != this ) {
-		UE_LOG(LogTemp, Warning, TEXT("OnTriggerOverlapEnd"));
 	}	
 }
 
@@ -59,7 +61,6 @@ bool ATrigger::addObjectToTrigger(UObject* obj) {
 
 void ATrigger::OverlapStart(AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OverlapStart"));
 	for (UObject* o : triggerActions) {
 		ITriggerableInterface::Execute_onTriggerActivated(o,OtherActor);
 	}
@@ -67,7 +68,6 @@ void ATrigger::OverlapStart(AActor* OtherActor)
 
 void ATrigger::OverlapEnd(AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OverlapEnd"));
 	for (UObject* o : triggerActions) {
 		ITriggerableInterface::Execute_onTriggerDesactivated(o, OtherActor);
 	}

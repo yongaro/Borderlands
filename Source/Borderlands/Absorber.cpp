@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "Absorber.h"
+#include "Borderlands.h"
 #include "DamageHandler.h"
 #include "ElectricDamageType.h"
 
@@ -12,7 +12,7 @@ UAbsorber::UAbsorber()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true;
+	// bWantsBeginPlay = true; // deprecated and now automatic ?
 	bWantsInitializeComponent = true;
 	PrimaryComponentTick.bCanEverTick = true;
 	maxAmount = 300; /*dummy default values*/
@@ -66,11 +66,10 @@ int UAbsorber::absorb(int damageAmount, FDamageEvent const & DamageEvent)
 	if (DamageType) {
 		multiplier = DamageType->getMultiplier(this->type);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Absorbing %i * %f"), damageAmount, multiplier);
+
 	int unAbsorbed = 0;
 	if (damageAmount > amount) {
 		unAbsorbed = damageAmount - amount;
-		UE_LOG(LogTemp, Warning, TEXT("%s didn't absorb %i"), *GetName(), unAbsorbed);
 	}
 	amount = FMath::Max(0,(int)( amount - damageAmount*multiplier));
 	time = -coolDown;
@@ -93,8 +92,6 @@ void UAbsorber::regen(float DeltaTime)
 		amount = fmin(maxAmount, newAmount);
 	}
 	else {
-		
-		UE_LOG(LogTemp, Warning, TEXT("Disabling tick"));
 		PrimaryComponentTick.SetTickFunctionEnable(false);
 	}
 

@@ -1,7 +1,7 @@
 // Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 
-#include "Borderlands.h"
 #include "BorderlandsProjectile.h"
+#include "Borderlands.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 ABorderlandsProjectile::ABorderlandsProjectile() 
@@ -31,7 +31,8 @@ ABorderlandsProjectile::ABorderlandsProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
-void ABorderlandsProjectile::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+// void ABorderlandsProjectile::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ABorderlandsProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())

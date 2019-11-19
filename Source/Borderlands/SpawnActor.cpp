@@ -1,7 +1,7 @@
 // Fill out your= copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "SpawnActor.h"
+#include "Borderlands.h"
 #include "TestMeshSocket/TestSocket.h"
 
 // Sets default values
@@ -38,7 +38,8 @@ void ASpawnActor::spawn() {
 		if (world) {
 			FActorSpawnParameters params;
 			params.Owner = this;
-			params.bNoCollisionFail = true;
+			// params.bNoCollisionFail = true;
+			params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			FVector loc = GetActorLocation()+offset;
 			FRotator rotation = FRotator::ZeroRotator;
 			rotation.Yaw = 90.f;

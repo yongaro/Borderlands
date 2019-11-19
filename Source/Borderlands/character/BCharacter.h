@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "../weapon/WeaponGraphic.h"
 #include "BCharacter.generated.h"

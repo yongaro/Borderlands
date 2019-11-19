@@ -11,6 +11,8 @@
 class BORDERLANDS_API SInGameUI : public SCompoundWidget
 {
 public:
+	static const FString s_font_name;
+
 	SLATE_BEGIN_ARGS(SInGameUI)
 	{}
 	SLATE_ARGUMENT(TWeakObjectPtr<class ABorderlandsHUD>, BorderlandsHUD)

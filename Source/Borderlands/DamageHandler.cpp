@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Borderlands.h"
 #include "DamageHandler.h"
+#include "Borderlands.h"
 #include "character/BCharacter.h"
 #include "DamageActor.h"
 #include "Engine.h"
@@ -11,7 +11,7 @@ UDamageHandler::UDamageHandler()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true;
+	// bWantsBeginPlay = true; // Always true from now on ?
 	PrimaryComponentTick.bCanEverTick = true;
 	bWantsInitializeComponent = true;
 	/*UAbsorber* temp=CreateDefaultSubobject<UAbsorber>("Life");
@@ -49,7 +49,6 @@ void UDamageHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 
 	if (dotCount > 0 && dotTimer > 60) {
-		UE_LOG(LogTemp, Warning, TEXT("Application du DOT"));
 		dotTimer = 0;
 		dotCount--;
 		Damage(dot->dps,*dot);
@@ -138,18 +137,13 @@ bool UDamageHandler::HasAbsorberOfType_Implementation(EAbsType abstype)
 
 bool UDamageHandler::Damage_Implementation(uint8 damageAmount, const FDamageEvent &DamageEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Damage_Impl"));
 	FMyDamageEvent* f;
 	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
 		f = (FMyDamageEvent*)&DamageEvent;
 		if (FMath::SRand() < f->effectChance) {
-			UE_LOG(LogTemp, Warning, TEXT("EFFET"));
 			dot = f;
-			dotCount = 5; //durée des effets ?
+			dotCount = 5; //durï¿½e des effets ?
 			dotTimer = 0;
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("PAS D EFFET"));
 		}
 	}
 	for (UAbsorber* abs : absorbers) {
@@ -159,25 +153,6 @@ bool UDamageHandler::Damage_Implementation(uint8 damageAmount, const FDamageEven
 	updateHUD();
 	return absorbers.Last()->getAmount() <= 0;
 }
-
-/*bool UDamageHandler::Damage_Implementation(uint8 damageAmount, FDamageEvent const & DamageEvent)
-{
-	FMyDamageEvent* f;
-	if (DamageEvent.IsOfType(FMyDamageEvent::ClassID)) {
-		f = (FMyDamageEvent*)&DamageEvent;
-		if (FMath::SRand() < f->effectChance) {
-			UE_LOG(LogTemp, Warning, TEXT("EFFET"));
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("PAS D EFFET"));
-		}
-	}
-	for (UAbsorber* abs : absorbers) {
-		damageAmount = abs->absorb(damageAmount, DamageEvent);
-	}
-	return damageAmount > 0;
-}*/
-
 
 
 
